@@ -93,6 +93,7 @@ function closeModal() {
 	setTimeout(function() {
 		$('#details-modal').remove();
 		$('.modal-backdrop').remove();
+		alert();
 	},500);
 }
 

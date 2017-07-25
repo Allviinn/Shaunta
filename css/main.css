@@ -68,3 +68,8 @@ img.details {
 .product_title {
 	height: 25px;
 }
+
+.table-auto {
+	width: auto;
+	margin: 0 auto;
+}

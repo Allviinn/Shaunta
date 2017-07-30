@@ -2,6 +2,7 @@ body {
 	padding-top: 50px;
 }
 
+
 #headerWrapper {
 	position: relative;
 	padding: 0;
@@ -72,4 +73,9 @@ img.details {
 .table-auto {
 	width: auto;
 	margin: 0 auto;
+}
+
+#add-product-btn {
+	margin-top: -40px;
+	margin-right: 30px;
 }

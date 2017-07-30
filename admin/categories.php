@@ -127,6 +127,9 @@ if(isset($_GET['edit'])) {
 				</div>
 				<div class="form-group">
 					<input type="submit" value="<?=((isset($_GET['edit']))? 'Edit ':'Add '); ?> Category" class="btn btn-success">
+					<?php if(isset($_GET['edit'])) { ?>
+						<a href="categories.php" class="btn btn-default">Cancel</a>
+					<?php } ?>
 				</div>
 			</form>
 		</div>

@@ -6,7 +6,6 @@ include 'includes/navigation.php';
 if(isset($_GET['add'])) {
 
 	$brand_query = $db->query("SELECT * FROM brand ORDER BY brand");
-
 	$parent_query = $db->query("SELECT * FROM categories WHERE parent = 0 ORDER BY category");
 ?>
 	

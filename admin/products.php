@@ -17,7 +17,7 @@ if(isset($_GET['add'])) {
 		if(!empty($_POST['sizes']))
 		{
 			$sizeString = sanitize($_POST['sizes']);
-			echo $sizeString;
+			
 			//$sizeString = rtrim($sizeString,',');  j'enleve la virgule a la fin de la chaine en JavaScript dans le footer dans la fonction updateSizes();
 			$sizesArray = explode(',', $sizeString);
 			$sArray = array();

@@ -11,6 +11,29 @@
 
 <script type="text/javascript">
 	
+function updateSizes() {
+	//fonction pour voir prévisualiser les taille et quantité rentrés
+	var sizeString = '';
+	for(var i = 1; i <= 5; i++) 
+	{
+		if($('#size'+i).val() != '') 
+		{
+			sizeString += $('#size'+i).val()+':'+$('#qty'+i).val()+',';
+
+		}
+	}
+	//fonction pour enlenver la virgule a la fin de quantité et taille
+	var strLen = sizeString.length;
+	var lastCar = sizeString.substr(strLen-1, strLen);
+	if(lastCar == ",") {
+		sizeString = sizeString.substr(0, strLen-1);
+	}
+	
+	$('#sizes').val(sizeString);
+}
+
+
+//dans l'admin ajout produit, cette fonction (ajax) permet d'appeler les catégories enfant de la catégorie parent selectionner dans laquelle on souaite ajouter un poduit.
 function get_child_options() {
 	var parent_id = $('#parent').val();
 	$.ajax({

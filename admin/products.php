@@ -1,13 +1,38 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'e-commerce/core/init.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/e-commerce/core/init.php';
 include 'includes/head.php';
 include 'includes/navigation.php';
 
+/********************************************************************************************
+****************************    AJOUT PRODUIT   *********************************************
+********************************************************************************************/
 if(isset($_GET['add'])) {
 
 	$brand_query = $db->query("SELECT * FROM brand ORDER BY brand");
-
 	$parent_query = $db->query("SELECT * FROM categories WHERE parent = 0 ORDER BY category");
+
+	
+	if($_POST) 
+	{
+		if(!empty($_POST['sizes']))
+		{
+			$sizeString = sanitize($_POST['sizes']);
+			echo $sizeString;
+			//$sizeString = rtrim($sizeString,',');  j'enleve la virgule a la fin de la chaine en JavaScript dans le footer dans la fonction updateSizes();
+			$sizesArray = explode(',', $sizeString);
+			$sArray = array();
+			$qArray = array();
+			foreach($sizesArray as $ss) {
+				$s = explode(':', $ss);
+				$sArray[] = $s[0];
+				$qArray[] = $s[1];
+			}
+		} 
+		else
+		{
+			$sizesArray= array();
+		}
+	}
 ?>
 	
 	<h2 class="text-center">Add a new Product</h2><hr>
@@ -110,7 +135,57 @@ if(isset($_GET['add'])) {
 		</div><div class="clearfix"></div>
 	</form>
 
+	<!-- *********** MODAL FOR SIZES OF ADDI?G PRODUCT ******************** -->
+<div class="modal fade" id="sizesModal" tabindex="-1" role="dialog" aria-labelledby="sizesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="sizesModalLabel">Size & Quantity</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="container-fluid">
+        <?php for($i = 1; $i <= 5; $i++): ?>
+        	<div class="form-group col-md-6">
+        		<label for="size<?=$i;?>">Size</label>
+        		<input 
+        			type="text" 
+        			name="size<?=$i;?>" 
+        			id="size<?=$i;?>" 
+        			value="<?=((!empty($sArray[$i-1]))?$sArray[$i-1]:''); ?>" 
+        			class="form-control">
+        	</div>
+
+        	<div class="form-group col-md-6">
+        		<label for="qty<?=$i;?>">Quantity</label>
+        		<input 
+        			type="number" 
+        			name="qty<?=$i;?>" 
+        			id="qty<?=$i;?>" 
+        			value="<?=((!empty($qArray[$i-1]))?$qArray[$i-1]:''); ?>" 
+        			min="0" 
+        			class="form-control">
+        	</div>
+        <?php endfor; ?>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" 
+        	onclick="updateSizes();jQuery('#sizesModal').modal('toggle');return false;">
+        	Save changes
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- *********** END MODAL FOR SIZES OF ADDI?G PRODUCT ******************** -->
+
+<!-- *********** END ADD PRODUCT ******************** -->
 <?php
+/********************************************************************************************
+****************************    LISTE PRODUIT   *********************************************
+********************************************************************************************/
 } else {
 
 	$products = "SELECT * FROM products WHERE deleted != 1";
@@ -166,7 +241,7 @@ if(isset($_GET['add'])) {
 						<td><?=money($product['list_price']); ?></td>
 						<td><?=$category; ?></td>
 						<td>
-							<a href="products.php?featured=<?=(($product['featured'] == 0)?'1':'0');?>&id=<?=$product['id'	];?>" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-<?=(($product['	featured'] == 1)?'minus':'plus') ;?>""></span>
+							<a href="products.php?featured=<?=(($product['featured'] == 0)?'1':'0');?>&id=<?=$product['id'	];?>" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-<?=(($product['featured'] == 1)?'minus':'plus') ;?>""></span>
 							</a>
 							&nbsp <?=(($product['featured'] == 1)?'Featured Product':'Not Featured') ?>
 						</td>

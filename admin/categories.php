@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'e-commerce/core/init.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/e-commerce/core/init.php';
 include 'includes/head.php';
 include 'includes/navigation.php';
 

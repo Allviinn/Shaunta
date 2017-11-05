@@ -34,12 +34,16 @@ function updateSizes() {
 
 
 //dans l'admin ajout produit, cette fonction (ajax) permet d'appeler les catégories enfant de la catégorie parent selectionner dans laquelle on souaite ajouter un poduit.
-function get_child_options() {
+function get_child_options(selected) {
+	if (typeof selected === 'undefined')
+	{
+		var selected = "";
+	}
 	var parent_id = $('#parent').val();
 	$.ajax({
 		url: '/e-commerce/admin/parsers/child_categories.php',
 		type: 'POST',
-		data : {parent_id: parent_id},
+		data : {parent_id: parent_id, selected: selected},
 		success: function(data) {
 			$('#child').html(data);
 		},
@@ -49,7 +53,9 @@ function get_child_options() {
 	});
 }
 
-$('select[name="parent"]').change(get_child_options);
+$('select[name="parent"]').change(function() {
+	get_child_options();
+});
 
 </script>
 

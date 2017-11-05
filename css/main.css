@@ -79,3 +79,8 @@ img.details {
 	margin-top: -40px;
 	margin-right: 30px;
 }
+
+.saved-image img {
+	width: 150px;
+	height: auto;
+}

@@ -47,7 +47,7 @@ ob_start();
 						</div>
 						<div class="col-sm-6">
 							<h4>Details</h4>
-							<p><?=$product['description'];?></p><br>
+							<p><?=nl2br($product['description']);?></p><br>
 							<p>Price : $<?=$product['price'];?></p><br>
 							<p>Brand : <?=$brand2['brand'];?></p>
 							<form action="add_cart.php" method="post">

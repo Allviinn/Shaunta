@@ -1,5 +1,9 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'].'/e-commerce/core/init.php';
+if(!is_logged_in())
+{
+	login_error_redirect();
+}
 include 'includes/head.php';
 include 'includes/navigation.php';
 
@@ -13,15 +17,7 @@ if(isset($_GET['delete']))
 	header('Location: products.php');
 }
 
-/********************************************************************************************
-**************************** DESUPPRESSION PRODUIT   ****************************************
-********************************************************************************************/
-if(isset($_GET['restore']))
-{
-	$restore_id = sanitize($_GET['restore']);
-	$db->query("UPDATE products SET deleted = '0' WHERE id = '$restore_id'");
-	header('Location: products.php');
-}
+
 
 $dbpath = '';
 /********************************************************************************************
@@ -345,58 +341,6 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 <!-- *********** END ADD PRODUCT ******************** -->
 <?php
 /********************************************************************************************
-****************************    LISTE PRODUIT archives ou supprimer**************************
-********************************************************************************************/
-}else if (isset($_GET['archived']))
-{ ?>
-<h2 class="text-center">Archived Products</h2>
-	
-	<div class="container">
-		<table class="table table-bordered table-condensed table-striped">
-			
-			<thead>
-				<th></th>	<th>Product</th>	<th>Price</th>	<th>List Price</th> <th>Category</th>
-			</thead>
-		
-			<tbody>
-				<?php 
-					$archivedProducts = $db->query("SELECT * FROM products WHERE deleted = '1'");
-					while($archProduct = mysqli_fetch_assoc($archivedProducts)) { 
-						$child_id = (int)$archProduct['categories'];
-						$child_cat_sql = "SELECT * FROM categories WHERE id = '$child_id'";
-						$child_cat_sql = $db->query($child_cat_sql);
-						$child_cat = mysqli_fetch_assoc($child_cat_sql);
-	
-						$parent_id = (int)$child_cat['parent'];
-						$parent_cat_sql = "SELECT * FROM categories WHERE id = '$parent_id'";
-						$parent_cat_sql = $db->query($parent_cat_sql);
-						$parent_cat = mysqli_fetch_assoc($parent_cat_sql);
-	
-						$category = $parent_cat['category'].'~'.$child_cat['category'];
-	
-				?>
-		
-					<tr>
-						<td align="center">
-							<a href="products.php?restore=<?=$archProduct['id']; ?>" class="btn btn-xs btn-default">
-								<span class="glyphicon glyphicon-refresh"></span>
-							</a>
-						</td>
-						<td><?=$archProduct['title']; ?></td>
-						<td><?=money($archProduct['price']); ?></td>
-						<td><?=money($archProduct['list_price']); ?></td>
-						<td><?=$category; ?></td>
-					</tr>
-		
-				<?php } ?>
-			</tbody>
-		</table>
-		<div class="col-md-2 pull-right">
-			<a href="products.php" class="btn btn-success">Go Back</a>
-		</div><div class="clearfix"></div>
-	</div> 
-<?php
-/********************************************************************************************
 ****************************    LISTE PRODUIT   *********************************************
 ********************************************************************************************/
 } else {
@@ -413,10 +357,9 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 	?>
 	
 	<h2 class="text-center">Products</h2>
-	<div class="col-md-3 pull-right">
-			<a href="products.php?archived=1" class="btn btn-primary" id="archived-products">Archived</a>
-			<a href="products.php?add=1" class="btn btn-success" id="add-product-btn">Add New Product</a>
-		</div><div class="clearfix"></div>
+	
+			<a href="products.php?add=1" class="btn btn-success pull-right" id="add-product-btn">Add New Product</a>
+		<div class="clearfix"></div>
 	<hr>
 	
 	<div class="container">

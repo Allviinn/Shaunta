@@ -31,7 +31,7 @@ $pquery = $db->query($sql);
 							$kid_query = $db->query($sql2); 
 							while ($parent2 = mysqli_fetch_assoc($kid_query)) { ?>
 	
-							<li><a href="#"><?php echo $parent2['category']; ?></a></li>
+							<li><a href="category.php?cat=<?=$parent2['id'];?>"><?php echo $parent2['category']; ?></a></li>
 							
 						<?php } ?>
 					</ul>

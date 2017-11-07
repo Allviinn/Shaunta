@@ -53,10 +53,11 @@ ob_start();
 							<form action="add_cart.php" method="post">
 								<div class="form-group">
 									<div class="col-xs-3">
-										<label for="quantity">Quantity :</label><input type="text" class="form-control" id="quantity" name="quantity">
+										<label for="quantity">Quantity :</label>
+									<input type="number" class="form-control" id="quantity" name="quantity" min="0">
 									</div>
 									
-								</div><br><br>
+								</div><br><br><br><br>
 								<div class="form-group">
 									<label for="size">Size :</label>
 									<select name="size" id="size" class="form-control">

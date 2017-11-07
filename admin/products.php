@@ -87,7 +87,6 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 	
 	if($_POST) 
 	{
-		$dbpath = '';
 		// Premier 'if() {]', pour le champ de prévisualisation des tailles et quanités, 
 		$errors = array();
 		
@@ -147,40 +146,30 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 			echo display_errors($errors);
 		} else
 		{
-			//upload product photo and insertinto database
-			move_uploaded_file($tmpLoc, $uploadPath);
+			if(!empty($_FILES))
+			{
+				//upload product photo and insertinto database
+				move_uploaded_file($tmpLoc, $uploadPath);
+			}
 			$insertSql = "INSERT INTO products (title, price, list_price, brand, categories, image, description, featured, sizes, deleted) VALUES ('$title', '$price', '$list_price', '$brand', '$category', '$dbpath', '$description', '0', '$sizes', '0')";
-   			
-   			if(isset($_GET['edit']))
-   			{
-   				if(!empty($_FILES))
-   				{
-   					$insertSql = "UPDATE products 
-   						SET title = '$title', 
-   							price = '$price', 
-   							list_price = '$list_price',
-   							brand = '$brand',
-   							categories = '$category',
-   							image = '$dbpath',
-   							description = '$description',
-   							sizes = '$sizes'
-   						WHERE id = '$edit_id'";
-   				} else 
-   				{
-   					$insertSql =  "UPDATE products 
-   						SET title = '$title', 
-   							price = '$price', 
-   							list_price = '$list_price',
-   							brand = '$brand',
-   							categories = '$category',
-   							description = '$description',
-   							sizes = '$sizes'
-   						WHERE id = '$edit_id'";
-   				}
-   			}
-   			$db->query($insertSql);
-   			header('Location: products.php');
-   			
+
+			if(isset($_GET['edit']))
+			{
+				
+					$insertSql = "UPDATE products 
+						SET title = '$title', 
+							price = '$price', 
+							list_price = '$list_price',
+							brand = '$brand',
+							categories = '$category',
+							image = '$dbpath',
+							description = '$description',
+							sizes = '$sizes'
+						WHERE id = '$edit_id'";
+			}
+
+			$db->query($insertSql);
+   			header('Location: products.php');   			
 		}
 
 

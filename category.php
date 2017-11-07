@@ -2,11 +2,20 @@
 require_once "core/init.php"; //connection a la BDD
 include "includes/head.php"; //head (DOCTYPE ....)
 include "includes/navigation.php"; //menu de navigation
-include "includes/headerfull.php"; //image transform scale
+include "includes/headerpartial.php"; //image transform scale
 include "includes/left_bar.php"; //bar a gauche du contenu pricipale
 
-$sql = "SELECT * FROM products WHERE featured = 1";
-$featured = $db->query($sql);
+if(isset($_GET['cat']))
+{
+	$cat_id = sanitize($_GET['cat']);
+} else
+{
+	$cat_id = '';
+}
+
+$sql = "SELECT * FROM products WHERE categories = '$cat_id'";
+$productQ = $db->query($sql);
+$category = get_category($cat_id);
 
 ?>
 
@@ -15,13 +24,13 @@ $featured = $db->query($sql);
 <div class='col-md-8'>
 	<div class="row">
 
-		<h2 class="text-center">Feature Products</h2>
+		<h2 class="text-center"><?=$category['parent'].' '.$category['child'];?></h2>
 
-	<?php while ($products = mysqli_fetch_assoc($featured)) { ?>
+	<?php while ($products = mysqli_fetch_assoc($productQ)) { ?>
 
 		<div class="col-md-3 product-div">
 			<h4 class="product_title text-center"><?php echo $products["title"]; ?></h4>
-			<img src="<?php echo $products['image']; ?>" alt="<?php echo $products['image']; ?>" class="img-thumb center-block product-img"/>
+			<img src="<?php echo $products['image']; ?>" alt="<?php echo $products['image']; ?>" class="img-thumb center-block"/>
 			<p class="list-price text-danger text-center">
 				List Price: <s>$<?php echo $products["list_price"]; ?></s>
 			</p>

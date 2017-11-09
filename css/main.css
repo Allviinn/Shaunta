@@ -97,12 +97,12 @@ img.details {
 	background-color: white;
 }
 
-#headerWrapper {
+#partial-headerWrapper {
 	position: relative;
 	padding: 0;
 	margin: 0;
 	overflow: hidden;
-	height: 600px;
+	height: 200px;
 	background-image: url("../images/headerlogo/background.png");
 	background-repeat: no-repeat;
 	background-size: 100% 700px;
@@ -110,7 +110,7 @@ img.details {
 	background-attachment: fixed;
 }
 
-#logo-text {
+#partial-logo-text {
 	position: absolute;
 	width: 100%;
 	height: 180px;
@@ -122,7 +122,7 @@ img.details {
 	margin-top: -90px;
 }
 
-#for-flower {
+#partial-for-flower {
 	position: absolute;
 	width: 100%;
 	height: 400px;
@@ -130,11 +130,11 @@ img.details {
 	background-size: auto 400px;
 	background-repeat: no-repeat;
 	background-position: right bottom;
-	top: 525px;
+	top: 110px;
 	right: -50px;
 }
 
-#back-flower {
+#partial-back-flower {
 	position: absolute;
 	width: 100%;
 	height: 350px;
@@ -142,6 +142,6 @@ img.details {
 	background-position: left bottom;
 	background-repeat: no-repeat;
 	background-size: auto 350px;
-	top: 400px;
+	top: 100px;
 	left: -25px;
 }

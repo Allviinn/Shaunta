@@ -362,16 +362,19 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 				<?php 
 					while($product = mysqli_fetch_assoc($products)) { 
 						$child_id = (int)$product['categories'];
-						$child_cat_sql = "SELECT * FROM categories WHERE id = '$child_id'";
-						$child_cat_sql = $db->query($child_cat_sql);
-						$child_cat = mysqli_fetch_assoc($child_cat_sql);
+						//$child_cat_sql = "SELECT * FROM categories WHERE id = '$child_id'";
+						//$child_cat_sql = $db->query($child_cat_sql);
+						//$child_cat = mysqli_fetch_assoc($child_cat_sql);
 	
-						$parent_id = (int)$child_cat['parent'];
-						$parent_cat_sql = "SELECT * FROM categories WHERE id = '$parent_id'";
-						$parent_cat_sql = $db->query($parent_cat_sql);
-						$parent_cat = mysqli_fetch_assoc($parent_cat_sql);
+						//$parent_id = (int)$child_cat['parent'];
+						//$parent_cat_sql = "SELECT * FROM categories WHERE id = '$parent_id'";
+						//$parent_cat_sql = $db->query($parent_cat_sql);
+						//$parent_cat = mysqli_fetch_assoc($parent_cat_sql);
 	
-						$category = $parent_cat['category'].'~'.$child_cat['category'];
+						//$category = $parent_cat['category'].'~'.$child_cat['category'];
+						$category = get_category($child_id);
+						$category = $category['parent'].'~'.$category['child'];
+
 	
 				?>
 		

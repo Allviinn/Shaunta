@@ -1,5 +1,4 @@
 <?php
-
 $db = mysqli_connect("127.0.0.1","root","","ecommerce");
 
 if(mysqli_connect_errno()) {
@@ -13,6 +12,12 @@ require_once $_SERVER['DOCUMENT_ROOT']."/e-commerce/config.php";
 
 require_once BASEURL.'helpers/helpers.php';
 
+
+$cart_id = '';
+if(isset($_COOKIE[CART_COOKIE]))
+{
+	$cart_id = sanitize($_COOKIE[CART_COOKIE]);
+}
 
 if(isset($_SESSION['SBUser']))
 {

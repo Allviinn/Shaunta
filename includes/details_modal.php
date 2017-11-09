@@ -40,6 +40,7 @@ ob_start();
 			<div class="modal-body">
 				<div class="container-fluid">
 					<div class="row">
+					<span id="modal_errors" class="bg-danger"></span>
 						<div class="col-sm-6">
 							<div class="center-block">
 								<img src="<?= $product['image']; ?>" alt="<?=$product['title'];?>" class="details img-responsive"/>
@@ -50,7 +51,9 @@ ob_start();
 							<p><?=nl2br($product['description']);?></p><br>
 							<p>Price : $<?=$product['price'];?></p><br>
 							<p>Brand : <?=$brand2['brand'];?></p>
-							<form action="add_cart.php" method="post">
+							<form action="add_cart.php" method="post" id="add_product_form">
+								<input type="hidden" name="product_id" value="<?=$id;?>">
+								<input type="hidden" name="available" id="available" value="">
 								<div class="form-group">
 									<div class="col-xs-3">
 										<label for="quantity">Quantity :</label>
@@ -66,8 +69,8 @@ ob_start();
 											foreach($size_array as $string) {
 												$string_array = explode(':', $string);
 												$size  = $string_array[0];
-												$quantity = $string_array[1];
-												echo "<option value='".$size."'>".$size." (".$quantity." Available)</option>";
+												$available = $string_array[1];
+												echo "<option data-available='".$available."' value='".$size."'>".$size." (".$available." Available)</option>";
 											}
 										?>
 									</select>
@@ -80,7 +83,8 @@ ob_start();
 	
 			<div class="modal-footer">
 				<button class="btn btn-default" onclick="closeModal();">Close</button>
-				<button class="btn btn-warning" type="submit"><span class="glyphicon glyphicon-shopping-cart"></span>			Add to Cart
+				<button class="btn btn-warning" onclick="add_to_cart();return false;">
+					<span class="glyphicon glyphicon-shopping-cart"></span>Add to Cart
 				</button>
 			</div>
 		</div>
@@ -89,6 +93,11 @@ ob_start();
 
 <script type="text/javascript">
 	
+$('#size').change(function(){
+	var available = $('#size option:selected').data("available");
+	$('#available').val(available);
+});
+
 function closeModal() {
 	$('#details-modal').modal('hide');
 	setTimeout(function() {

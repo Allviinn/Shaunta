@@ -47,6 +47,44 @@ function detailModal(id) {
 	});
 }
 
+function add_to_cart() {
+	$('#modal_errors').html("");
+	var size = $('#size').val();
+	var quantity = $('#quantity').val();
+	var available = $('#available').val();
+	var error = "";
+	var data = $('#add_product_form').serialize();
+
+	if(size == '' || quantity == '' || quantity == 0)
+	{
+		error += '<p class="text-danger text-center">You must choose a size and quantity.</p>';
+		$('#modal_errors').html(error);
+		return;
+	} 
+	else if(quantity > available)
+	{
+		error += error += '<p class="text-danger text-center">There are only '+available+' available.</p>';
+		$('#modal_errors').html(error);
+		return;
+	} 
+	else 
+	{
+		$.ajax({
+			url : '/e-commerce/admin/parsers/add_cart.php',
+			method : 'post',
+			data : data,
+			success: function() {
+				location.reload();
+			},
+
+			error: function() { alert('Something went wrong');}
+		});
+	}
+
+
+
+}
+
 </script>
 
 

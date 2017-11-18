@@ -12,6 +12,8 @@ require_once $_SERVER['DOCUMENT_ROOT']."/e-commerce/config.php";
 
 require_once BASEURL.'helpers/helpers.php';
 
+require_once BASEURL.'vendor/autoload.php';
+
 
 $cart_id = '';
 if(isset($_COOKIE[CART_COOKIE]))

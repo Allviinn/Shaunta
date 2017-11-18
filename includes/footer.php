@@ -47,6 +47,17 @@ function detailModal(id) {
 	});
 }
 
+function update_cart(mode, edit_id, edit_size) {
+	var data = {"mode" : mode, "edit_id" : edit_id, "edit_size": edit_size};
+	$.ajax({
+		url : "/e-commerce/admin/parsers/update_cart.php",
+		method : "post",
+		data : data,
+		success : function(){ location.reload() },
+		error : function(){ alert('Something wen wrong') }
+	});
+}
+
 function add_to_cart() {
 	$('#modal_errors').html("");
 	var size = $('#size').val();

@@ -13,5 +13,7 @@
 	</script>
 	<!--BOOTSTRAP JS-->
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+	<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
 </head>
 <body>

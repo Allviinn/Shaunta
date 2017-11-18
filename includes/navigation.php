@@ -39,6 +39,7 @@ $pquery = $db->query($sql);
 				</li>
 				
 			<?php } ?>
+			<li><a href="cart.php"><span class="glyphicon glyphicon-shopping-cart"></span> My Cart</a></li>
 		</ul>
 		<!-- ***************FIN PREMIERE LISTE MENU **************-->
 	</div>

@@ -125,6 +125,14 @@ if($cart_id != '')
 				  	  		<div class="row">
 <form action="thankYou.php" method="post" id="payment-form">
 				  	  		 	<span class="bg-danger" id="payment-errors"></span>
+<input type="hidden" name="tax" value="<?=$tax ;?>">
+<input type="hidden" name="sub_total" value="<?=$sub_total; ?>">
+<input type="hidden" name="grand_total" value="<?=$grand_total; ?>">
+<input type="hidden" name="cart_id" value="<?=$cart_id; ?>">
+<input 	type="hidden" 
+		name="description" 
+		value="<?=$item_count.' item'.(($item_count > 1)?'s':'').' from Shauntas Boutique'; ?>"
+>
 				  	  		 		<div id="step1" style="display:block;">
 				  	  		 			<div class="form-group col-md-6">
 				  	  		 				<label for="full_name">Full Name :</label>
@@ -156,43 +164,23 @@ if($cart_id != '')
 				  	  		 			</div>
 				  	  		 			<div class="form-group col-md-6">
 				  	  		 				<label for="country">Country :</label>
-				  	  		 				<input class="form-control" id="country"s type="text" name="country">
+				  	  		 				<input class="form-control" id="country" type="text" name="country">
 				  	  		 			</div>
 				  	  		 		</div>
 
 				  	  		 		<div id="step2" style="display:none;">
-				  	  		 			<div class="form-group col-md-3">
-				  	  		 				<label for="name">Name on Card :</label>
-				  	  		 				<input type="text" id="name" class="form-control">
-				  	  		 			</div>
-				  	  		 			<div class="form-group col-md-2">
-				  	  		 				<label for="cvc">CVC :</label>
-				  	  		 				<input type="text" id="cvc" class="form-control">
-				  	  		 			</div>
-				  	  		 			<div class="form-group col-md-3">
-				  	  		 				<label for="number">Card Number :</label>
-				  	  		 				<input type="text" id="number" class="form-control">
-				  	  		 			</div>
-				  	  		 			<div class="form-group col-md-2">
-				  	  		 				<label for="exp-month">Expire Month :</label>
-				  	  		 				<select id="exp-month" class="form-control">
-				  	  		 					<option value=""></option>
-				  	  		 					<?php for($i = 1; $i < 13; $i++): ?>
-				  	  		 						<option value="<?=$i; ?>"><?=$i; ?></option>
-				  	  		 					<?php endfor; ?>
-				  	  		 				</select>
-				  	  		 			</div>
-				  	  		 			<div class="form-group col-md-2">
-				  	  		 				<label for="exp-year">Expire Year :</label>
-				  	  		 				<select class="form-control" id="exp-year">
-				  	  		 					<option value=""></option>
-				  	  		 					<?php 
-				  	  		 					$yr = date("Y");
-				  	  		 					for($i = 0; $i < 11; $i++): ?>
-				  	  		 						<option value="<?=$yr + $i; ?>"><?=$yr + $i; ?></option>
-				  	  		 					<?php endfor; ?>
-				  	  		 				</select>
-				  	  		 			</div>
+				  	  		 			<div class="form-group col-md-4">
+											<label for="name">Name on Card :</label>
+											<input type="test" id="name" class="form-control">
+										</div>
+										<!-- DEBUT INPUT CREE PAR STRIPE? 3 EN 1? NUM? CVC? EXPIRATION  -->
+										<div class="form-group col-md-8">
+											<label for="card">Card Information :</label>
+											<div id="card-element" class="form-control">
+												<!-- input created by stripe goes here !! -->
+											</div>
+										</div>
+										<!-- FIN INPUT CREE PAR STRIPE? 3 EN 1? NUM? CVC? EXPIRATION  -->
 				  	  		 		</div>
 				  	  		 	
 				  	  		</div>
@@ -276,9 +264,81 @@ if($cart_id != '')
 		});
 	}
 
+//****************************************************************************************
+//*************************** DEBUT CODE STRIPE POUR FORMULAIRE ET TOKEN *****************
+//****************************************************************************************
+	
 	//clé de test public de stripe
-	Stripe.setPublishableKey('<?=STRIPE_PUBLIC; ?>');
+	var stripe = Stripe('<?=STRIPE_PUBLIC;?>');
+	var elements = stripe.elements();
 
+	//FONCTION DE STRIPE POUR SOUMMETRE LE FORMULAIRE DE CARTE SI TOUT EST OK AVEC LE TOKEN
+	//cette fonction est appelée plus bas
+	function stripeTokenHandler(token) {
+ 	 	// Insert the token ID into the form so it gets submitted to the server
+  		var form = document.getElementById('payment-form');
+  		var hiddenInput = document.createElement('input');
+  		hiddenInput.setAttribute('type', 'hidden');
+  		hiddenInput.setAttribute('name', 'stripeToken');
+  		hiddenInput.setAttribute('value', token.id);
+  		form.appendChild(hiddenInput);
+
+  		// Submit the form
+ 		form.submit();
+	}
+
+	
+
+	// Create an instance of the card Element
+	var card = elements.create('card');
+
+	// Add an instance of the card Element into the `card-element` <div>
+	card.mount('#card-element');
+
+	card.addEventListener('change', function(event) {
+  		var displayError = document.getElementById('payment-errors');
+  		if (event.error) {
+    		displayError.textContent = event.error.message;
+  		} else {
+    		displayError.textContent = '';
+  		}
+
+  		
+	});
+
+	var form = document.getElementById('payment-form');
+	form.addEventListener('submit', function(event) {
+  		event.preventDefault();
+
+  		if($('#name').val() == '')
+  		{
+  			$('#payment-errors').html('You must enter your name.');
+  		} 
+  		else if ($('#name').val() != '') 
+  		{
+  			$('#payment-errors').html('');
+  		}
+
+  		if($('#payment-errors').html() == '')
+  		{
+  			stripe.createToken(card).then(function(result) {
+    			if (result.error) {
+      				// Inform the customer that there was an error
+      				var errorElement = document.getElementById('payment-errors');
+      				errorElement.textContent = result.error.message;
+    			} else {
+      				// Send the token to your server
+     				stripeTokenHandler(result.token);
+    			}
+  			});
+  		}
+
+
+
+  	});
+//****************************************************************************************
+//*************************** FIN CODE STRIPE POUR FORMULAIRE ET TOKEN *******************
+//****************************************************************************************
 </script>
 
 

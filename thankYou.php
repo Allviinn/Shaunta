@@ -40,6 +40,34 @@ try {
 	  "metadata" => $meta_data
 	));
 
+	//adjust inventory
+	$itemQ = $db->query("SELECT * FROM cart WHERE id = '$cart_id'");
+	$iresults = mysqli_fetch_assoc($itemQ);
+	$items = json_decode($iresults['items'], true);
+	foreach($items as $item)
+	{
+		$newSizes = array();
+		$item_id = $item['id'];
+		$productQ = $db->query("SELECT sizes FROM products WHERE id = '$item_id'");
+		$product = mysqli_fetch_assoc($productQ);
+		$sizes = sizesToArray($product['sizes']);
+		foreach($sizes as $size)
+		{
+			if($size['size'] == $item['size'])
+			{
+				$q = $size['quantity'] - $item['quantity'];
+				$newSizes[] = array('size' => $size['size'], 'quantity' => $q);
+			} 
+			else 
+			{
+				$newSizes[] = array('size' => $size['size'], 'quantity' => $size['quantity']);
+			}
+		}
+		$sizeString = sizesToString($newSizes);
+		$db->query("UPDATE products SET sizes = '$sizeString' WHERE id = '$item_id'");
+	}
+
+	//update cart
 	$db->query("UPDATE cart SET paid = 1 WHERE id = '$cart_id'");
 	$db->query("INSERT INTO transactions 
 	(	charge_id, 
@@ -80,7 +108,7 @@ try {
 	include 'includes/navigation.php';
 	include 'includes/headerpartial.php';
 	?>
-		<h1 class="text-centertext-success">Thank You !</h1>
+		<h1 class="text-center text-success">Thank You !</h1>
 		<p>
 			Your Cart has been successfully charged <?=money($grand_total);?>. You can print this page as a receipt.
 		</p>

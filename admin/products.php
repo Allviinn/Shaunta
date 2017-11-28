@@ -102,7 +102,7 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 			}
 		}
 		//VERIFICATION DE LIMAGE UPLOADER POUR LAJOUT DE PRODUIT
-		if(!empty($_FILES))
+		if($_FILES['photo']['name'] != '')
 		{
 			$photo = $_FILES['photo'];
 			$name = $photo['name'];

@@ -73,3 +73,24 @@ function get_category($child_id) {
 	$category = mysqli_fetch_assoc($query);
 	return $category;
 }
+
+function sizesToArray($string) {
+	$sizesArray = explode(',', $string);
+	$returnArray = array();
+	foreach($sizesArray as $size) 
+	{
+		$s = explode(':', $size);
+		$returnArray[] = array('size' => $s[0], 'quantity' => $s[1]);
+	}
+	return $returnArray;
+}
+
+function sizesToString($sizes) {
+	$sizeString = '';
+	foreach($sizes as $size)
+	{
+		$sizeString .= $size['size'].':'.$size['quantity'].',';
+	}
+	$trimmed = rtrim($sizeString, ',');
+	return $trimmed;
+}

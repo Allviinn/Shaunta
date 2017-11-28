@@ -70,7 +70,10 @@ ob_start();
 												$string_array = explode(':', $string);
 												$size  = $string_array[0];
 												$available = $string_array[1];
-												echo "<option data-available='".$available."' value='".$size."'>".$size." (".$available." Available)</option>";
+												if($available > 0)
+												{
+													echo "<option data-available='".$available."' value='".$size."'>".$size." (".$available." Available)</option>";
+												}
 											}
 										?>
 									</select>

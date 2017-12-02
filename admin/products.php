@@ -46,9 +46,13 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 
 		if(isset($_GET['delete_image']))
 		{
-			$img_url = $_SERVER['DOCUMENT_ROOT'].$product['image'];
+			$imgi = (int)$_GET['imgi'] - 1;
+			$images = explode(',', $product['image']);
+			$img_url = $_SERVER['DOCUMENT_ROOT'].$images[$imgi];
 			unlink($img_url);
-			$db->query("UPDATE products SET image = '' WHERE id = '$edit_id'");
+			unset($images[$imgi]);
+			$imageString = implode(',', $images);
+			$db->query("UPDATE products SET image = '$imageString' WHERE id = '$edit_id'");
 			header('Location: products.php?edit='.$edit_id);
 		}
 
@@ -87,12 +91,16 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 	
 	if($_POST) 
 	{
+
 		// Premier 'if() {]', pour le champ de prévisualisation des tailles et quanités, 
 		$errors = array();
 		
 
 		//DEUXIEME 'if() {}', ON VERIFIE QUE LES CHAMPS DU FORMULAIRES D'AJOUT DE PRODUITS SONT VIDE? SI OUI ON REMPLI LE TABLEAU '$errors'
 		$required = array('title', 'brand', 'price', 'parent', 'child', 'sizes');
+		$allowed = array('png', 'jpg', 'jpeg', 'gif');
+		$tmpLoc = array();
+		$uploadPath = array();
 		foreach($required as $field) 
 		{
 			if($_POST[$field] == '') 
@@ -101,43 +109,51 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 				break;
 			}
 		}
+		$photoCount = count($_FILES['photo']['name']);
+
 		//VERIFICATION DE LIMAGE UPLOADER POUR LAJOUT DE PRODUIT
-		if($_FILES['photo']['name'] != '')
+		if($photoCount > 0)
 		{
-			$photo = $_FILES['photo'];
-			$name = $photo['name'];
-			$nameArray = explode('.', $name);
-			$fileName = $nameArray[0];
-			$fileExt = $nameArray[1];
-			$mime = explode('/', $photo['type']);
-			$mimeType = $mime[0];
-			$mimeExt = $mime[1];
-			$tmpLoc = $photo['tmp_name'];
-			$fileSize = $photo['size'];
-			$allowed = array('png', 'jpg', 'jpeg', 'gif');
-			$uploadName = md5(microtime()).'.'.$fileExt;
-			$uploadPath = BASEURL.'images/products/'.$uploadName;
-			$dbpath = '/e-commerce/images/products/'.$uploadName;
-
-			if($mimeType != 'image')
+			for($i = 0; $i < $photoCount; $i++)
 			{
-				$errors[] = 'The file must be an image.';
-			}
+				$name = $_FILES['photo']['name'][$i];
+				$nameArray = explode('.', $name);
+				$fileName = $nameArray[0];
+				$fileExt = $nameArray[1];
+				$mime = explode('/', $_FILES['photo']['type'][$i]);
+				$mimeType = $mime[0];
+				$mimeExt = $mime[1];
+				$tmpLoc[] = $_FILES['photo']['tmp_name'][$i];
+				$fileSize = $_FILES['photo']['size'][$i];
+				$uploadName = md5(microtime().$i).'.'.$fileExt;
+				$uploadPath[] = BASEURL.'images/products/'.$uploadName;
+				if($i != 0)
+				{
+					$dbpath .= ',';
+				}
+				$dbpath .= '/e-commerce/images/products/'.$uploadName;
 
-			if(!in_array($fileExt, $allowed))
-			{
-				$errors[] = 'The photo extension must be a png, jpg, jpeg or gif.';
-			}
+				if($mimeType != 'image')
+				{
+					$errors[] = 'The file must be an image.';
+				}
 
-			if($fileSize > 25000000) 
-			{
-				$errors[] = 'The file size must be under 25MB.';
-			}
+				if(!in_array($fileExt, $allowed))
+				{
+					$errors[] = 'The photo extension must be a png, jpg, jpeg or gif.';
+				}
 
-			if($fileExt != $mimeExt && ($mimeExt == 'jpeg' && $fileExt != 'jpg'))
-			{
-				$errors[] = 'File extension does not match the file.';
+				if($fileSize > 25000000) 
+				{
+					$errors[] = 'The file size must be under 25MB.';
+				}
+
+				if($fileExt != $mimeExt && ($mimeExt == 'jpeg' && $fileExt != 'jpg'))
+				{
+					$errors[] = 'File extension does not match the file.';
+				}
 			}
+		
 		}
 
 		//SI LE TABLEAU DERREURS NEST PAS VIDE? ON AFFICHE LES ERRUERS
@@ -146,10 +162,13 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 			echo display_errors($errors);
 		} else
 		{
-			if(!empty($_FILES))
+			if($photoCount > 0)
 			{
-				//upload product photo and insertinto database
-				move_uploaded_file($tmpLoc, $uploadPath);
+				for($i = 0; $i < $photoCount; $i++)
+				{
+					//upload product photo and insertinto database
+					move_uploaded_file($tmpLoc[$i], $uploadPath[$i]);
+				}
 			}
 			$insertSql = "INSERT INTO products (title, price, list_price, brand, categories, image, description, featured, sizes, deleted) VALUES ('$title', '$price', '$list_price', '$brand', '$category', '$dbpath', '$description', '0', '$sizes', '0')";
 
@@ -259,13 +278,25 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 		</div>
 		<div class="form-group col-md-6">
 			<?php if($saved_image != ""): ?>
-				<div class="saved-image">
-				<img src="<?=$saved_image;?>" alt="Saved Image"><br>
-				<a href="products.php?delete_image=1&edit=<?=$edit_id ?>" class="text-danger">Delete Image</a>
-				</div>
+				<?php
+					$imgi = 1;
+					$images = explode(',', $saved_image);
+					foreach($images as $image):
+				?>
+						<div class="saved-image col-md-4">
+							<img src="<?=$image;?>" alt="Saved Image"><br>
+							<a 
+							href="products.php?delete_image=1&edit=<?=$edit_id;?>&imgi=<?=$imgi;?>" 
+							class="text-danger">
+								Delete Image
+							</a>
+						</div>
+					<?php 
+					$imgi++;
+					endforeach;?>
 			<?php else: ?>
 			<label for="photo">Product Photo* :</label>
-			<input type="file" name="photo" id="photo" class="form-control">
+			<input type="file" name="photo[]" id="photo" class="form-control" multiple>
 		<?php endif; ?>
 		</div>
 		<div class="form-group col-md-6">

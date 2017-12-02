@@ -61,8 +61,8 @@ body {
 	margin-top: 50px;
 }
 
-img.details {
-	width: 80%;
+fotorama__wrap {
+	width: 90%;
 	margin: 15px auto;
 }
 
@@ -80,10 +80,13 @@ img.details {
 	margin-right: 30px;
 }
 
+.saved-image {
+	text-align: center;
+}
 
 .saved-image img {
-	width: 150px;
-	height: auto;
+	width: auto;
+	height: 150px;
 }
 
 #login-form {
@@ -145,3 +148,12 @@ img.details {
 	top: 100px;
 	left: -25px;
 }
+
+#cart_widget td, #recent_widget td{
+	font-size: 12px;
+}
+
+input.price-range {
+	width: 55px;
+}
+

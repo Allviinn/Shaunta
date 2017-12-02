@@ -1,6 +1,9 @@
 
 	<!-- BARRE A GAUCHE-->
 	<div class="col-md-2">
-		left side bar
+		<?php
 
+			include "widgets/filters.php";
+
+		?>
 	</div>

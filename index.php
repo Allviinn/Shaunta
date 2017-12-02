@@ -20,13 +20,16 @@ $featured = $db->query($sql);
 	<?php while ($products = mysqli_fetch_assoc($featured)) { ?>
 
 		<div class="col-md-3 product-div">
-			<h4 class="product_title text-center"><?php echo $products["title"]; ?></h4>
-			<img src="<?php echo $products['image']; ?>" alt="<?php echo $products['image']; ?>" class="img-thumb center-block product-img"/>
+			<h4 class="product_title text-center"><?=$products["title"];?></h4>
+			<?php 
+				$photos = explode(',', $products['image']);
+			?>
+			<img src="<?=$photos[0];?>" alt="<?=$products['image'];?>" class="img-thumb center-block product-img"/>
 			<p class="list-price text-danger text-center">
 				List Price: <s>$<?php echo $products["list_price"]; ?></s>
 			</p>
 			<p class="price text-center">
-				Our Price : $<?php echo $products["price"]; ?>
+				Our Price : $<?=$products["price"];?>
 			</p>
 			<button type="button" class="btn btn-sm btn-success center-block" onclick="detailModal(<?= $products['id']; ?>)">
 				Details

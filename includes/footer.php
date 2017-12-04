@@ -61,20 +61,20 @@ function update_cart(mode, edit_id, edit_size) {
 function add_to_cart() {
 	$('#modal_errors').html("");
 	var size = $('#size').val();
-	var quantity = $('#quantity').val();
-	var available = $('#available').val();
+	var quantity = parseInt($('#quantity').val());
+	var available = parseInt($('#available').val());
 	var error = "";
 	var data = $('#add_product_form').serialize();
-
-	if(size == '' || quantity == '' || quantity == 0)
+	//console.log(quantity+','+available);
+	if(available < quantity)
 	{
-		error += '<p class="text-danger text-center">You must choose a size and quantity.</p>';
+		error += '<p class="text-danger text-center">There are only '+available+' available.</p>';
 		$('#modal_errors').html(error);
 		return;
 	} 
-	else if(quantity > available)
+	else if(size == '' || quantity == '' || quantity == 0)
 	{
-		error += error += '<p class="text-danger text-center">There are only '+available+' available.</p>';
+		error += '<p class="text-danger text-center">You must choose a size and quantity.</p>';
 		$('#modal_errors').html(error);
 		return;
 	} 
@@ -91,9 +91,6 @@ function add_to_cart() {
 			error: function() { alert('Something went wrong');}
 		});
 	}
-
-
-
 }
 
 </script>

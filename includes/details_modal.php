@@ -66,8 +66,8 @@ ob_start();
 										<label for="quantity">Quantity :</label>
 									<input type="number" class="form-control" id="quantity" name="quantity" min="0">
 									</div>
-									
 								</div><br><br><br><br>
+
 								<div class="form-group">
 									<label for="size">Size :</label>
 									<select name="size" id="size" class="form-control">

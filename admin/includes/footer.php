@@ -18,7 +18,7 @@ function updateSizes() {
 	{
 		if($('#size'+i).val() != '') 
 		{
-			sizeString += $('#size'+i).val()+':'+$('#qty'+i).val()+',';
+			sizeString += $('#size'+i).val()+':'+$('#qty'+i).val()+':'+$('#threshold'+i).val()+',';
 
 		}
 	}

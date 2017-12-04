@@ -78,15 +78,17 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 		$sizesArray = explode(',', $sizeString);
 		$sArray = array();
 		$qArray = array();
+		$tArray = array();
 		foreach($sizesArray as $ss) 
 		{
 			$s = explode(':', $ss);
 			$sArray[] = $s[0];
 			$qArray[] = $s[1];
+			$tArray[] = $s[2];
 		}
 	} else
 	{
-		$sizesArray= array();
+		$sizesArray = array();
 	}
 	
 	if($_POST) 
@@ -323,7 +325,7 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
       <div class="modal-body">
       	<div class="container-fluid">
         <?php for($i = 1; $i <= 5; $i++): ?>
-        	<div class="form-group col-md-6">
+        	<div class="form-group col-md-4">
         		<label for="size<?=$i;?>">Size</label>
         		<input 
         			type="text" 
@@ -333,13 +335,24 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
         			class="form-control">
         	</div>
 
-        	<div class="form-group col-md-6">
+        	<div class="form-group col-md-4">
         		<label for="qty<?=$i;?>">Quantity</label>
         		<input 
         			type="number" 
         			name="qty<?=$i;?>" 
         			id="qty<?=$i;?>" 
         			value="<?=((!empty($qArray[$i-1]))?$qArray[$i-1]:''); ?>" 
+        			min="0" 
+        			class="form-control">
+        	</div>
+
+        	<div class="form-group col-md-4">
+        		<label for="threshold<?=$i;?>">Threshold</label>
+        		<input 
+        			type="number" 
+        			name="threshold<?=$i;?>" 
+        			id="threshold<?=$i;?>" 
+        			value="<?=((!empty($tArray[$i-1]))?$tArray[$i-1]:''); ?>" 
         			min="0" 
         			class="form-control">
         	</div>
@@ -393,20 +406,9 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 				<?php 
 					while($product = mysqli_fetch_assoc($products)) { 
 						$child_id = (int)$product['categories'];
-						//$child_cat_sql = "SELECT * FROM categories WHERE id = '$child_id'";
-						//$child_cat_sql = $db->query($child_cat_sql);
-						//$child_cat = mysqli_fetch_assoc($child_cat_sql);
-	
-						//$parent_id = (int)$child_cat['parent'];
-						//$parent_cat_sql = "SELECT * FROM categories WHERE id = '$parent_id'";
-						//$parent_cat_sql = $db->query($parent_cat_sql);
-						//$parent_cat = mysqli_fetch_assoc($parent_cat_sql);
-	
-						//$category = $parent_cat['category'].'~'.$child_cat['category'];
+						
 						$category = get_category($child_id);
 						$category = $category['parent'].'~'.$category['child'];
-
-	
 				?>
 		
 					<tr>
@@ -427,7 +429,7 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 							</a>
 							&nbsp <?=(($product['featured'] == 1)?'Featured Product':'Not Featured') ?>
 						</td>
-						<td>0</td>
+						<td><?=$product['sold']; ?></td>
 					</tr>
 		
 				<?php } ?>

@@ -94,3 +94,4 @@ function sizesToString($sizes) {
 	$trimmed = rtrim($sizeString, ',');
 	return $trimmed;
 }
+

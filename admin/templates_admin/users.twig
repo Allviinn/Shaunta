@@ -1,0 +1,120 @@
+
+{% if get_add == false and get_edit == false %}
+	<h2 class="text-center">Users</h2>
+	<a href="users.php?add=1" class="btn btn-success pull-right" id="add-product-btn">Add New User</a>
+	<hr>
+	<div class="container">
+		<table class="table table-bordered table-stripped table-condensed">
+			<thead>
+				<th></th>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Join Date</th>
+				<th>Last Login</th>
+				<th>Permissions</th>
+			</thead>
+		
+			<tbody>
+			{% for user in user_list_array %}
+				<tr>
+					<td align="center">
+						{% if user.id != user_data_id %}
+							<a href="users.php?delete={{ user.id }}" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-remove"></span>
+							</a>
+						{% endif %}
+						<a href="users.php?edit={{ user.id }}" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-edit"></span>
+							</a>
+					</td>
+					<td>{{ user.full_name }}</td>
+					<td>{{ user.email }}</td>
+					<td>{{ user.join_date | pretty_date }}</td>
+					<td>
+						{% if user.last_login == user.join_date %}
+							Never
+						{% else  %}
+							{{ user.last_login | pretty_date }}
+						{% endif %}
+					</td>
+					<td>{{ user.permissions }}</td>
+				</tr>
+		
+			{% endfor %}
+			</tbody>
+		
+		</table>
+	</div>
+{% else %}
+<!-- EDIT OR ADD FORM -->
+	{% if get_add == true %}
+		<h2 class="text-center">Add a new User</h2><hr>
+		<div class="container">
+		<form action="users.php?add=1" method="post">
+	{% elseif get_edit == true %}
+		<h2 class="text-center">Edit new User</h2><hr>
+		<div class="container">
+		<form action="users.php?edit={{ edit_user_id }}" method="post">
+	{% endif %}
+			<div class="form-group col-md-6">
+				<label for=name>Full Name :</label>
+				<input type="text" name="name" id="name" class="form-control" value="{{ name }}">
+			</div>
+			<div class="form-group col-md-6">
+				<label for=email>Email :</label>
+				<input type="email" name="email" id="email" class="form-control" value="{{ email }}">
+			</div>
+			<div class="form-group col-md-6">
+				{% if get_add == true %}
+					<label for="password">Password :</label>
+				{% elseif get_edit == true %}
+					<label for="password">New Password :</label>
+				{% endif %}
+				<input type="password" name="password" id="password" class="form-control" value="{{ password }}">
+			</div>
+			<div class="form-group col-md-6">
+				<label for=confirm>Confirm Password :</label>
+				<input type="password" name="confirm" id="confirm" class="form-control" value="{{ confirm }}">
+			</div>
+			<div class="form-group col-md-6">
+				<label for=permissions>Permissions :</label>
+				<select class="form-control" name="permissions">
+					{% if permissions == '' %}
+
+						<option value="" selected></option>
+						<option value="editor">Editor</option>
+						<option value="admin,editor">Admin</option>
+
+					{% elseif permissions == 'editor' %}
+
+						<option value=""></option>
+						<option value="editor" selected>Editor</option>
+						<option value="admin,editor">Admin</option>
+
+					{% elseif permissions == 'admin,editor' %}
+
+						<option value=""></option>
+						<option value="editor">Editor</option>
+						<option value="admin,editor" selected>Admin</option>
+
+					{% endif %}
+				</select>
+			</div>
+			<div class="form-group col-md-6 text-right" style="margin-top:25px;">
+				<a href="users.php" class="btn btn-default">Cancel</a>
+				{% if get_add == true %}
+					<input type="submit" value="Add User" class="btn btn-primary">
+				{% elseif get_edit == true %}
+					<input type="submit" value="Edit User" class="btn btn-primary">
+				{% endif %}
+			</div>
+		</form>
+	</div>
+
+
+
+
+
+
+
+{% endif %}

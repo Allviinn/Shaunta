@@ -1,0 +1,103 @@
+<h2 class="text-center">Categories</h2><hr>
+<div class="container">
+	<div class="row">
+		<!-- add Category form -->
+		<div class="col-md-6">
+			{% if edit_id != "" %}
+				<form class="form" action="categories.php?edit={{ edit_id }}" method="post">
+			{% else %}
+					<form class="form" action="categories.php" method="post">
+			{% endif %}
+
+			<legend>
+				{% if edit_id != "" %}
+					Edit
+				{% else %}
+					Add a
+				{% endif %}
+					Category
+			</legend>
+
+			<div id="errors"></div>
+				<div class="form-group">
+					<label for="parent">Parent :</label>
+					<select class="form-control" name="parent" id="parent">
+						{% if parent_value == 0 %}
+							<option value="0" selected="selected">Parent</option>
+						{% else %}
+							<option value="0" selected="">Parent</option>
+						{% endif %}
+						{% for parent in parent_array %}
+							<option value="{{ parent.id }}"
+								{% if parent_value == parent.id %}
+									selected="selected"
+								{% else %}
+									selected=""
+								{% endif %}
+							>	{{ parent.category }}
+							
+							</option>
+						{% endfor %}
+					</select>
+				</div>
+				<div class="form-group">
+					<label for="category">Category</label>
+					<input type="text" class="form-control" id="category" name="category"
+					 value="{{ category_value }}">
+				</div>
+				<div class="form-group">
+					{% if edit_id != "" %}
+						<input type="submit" value="Edit Category" class="btn btn-success">
+						<a href="categories.php" class="btn btn-default">Cancel</a>
+					{% else %}
+						<input type="submit" value="Add Category" class="btn btn-success">
+					{% endif %}
+				</div>
+			</form>
+		</div>
+		<!-- CATEGORIES table -->
+		<div class="col-md-6">
+			<table class="table table-bordered">
+				<thead>
+					<th>Category</th>	<th>Parent</th>		<th></th>
+				</thead>
+				<tbody>
+				{% set unique_array = [] %}
+				{% for parent in parent_cat_array %} 
+			
+					<tr class="bg-primary">
+						<td>{{ parent.category }}</td>
+						<td>Parent</td>
+						<td>
+							<a href="categories.php?edit={{ parent.id }}" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+							<a href="categories.php?delete={{ parent.id }}" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-remove-sign"></span>
+							</a>
+						</td>
+					</tr>
+					{% for child in child_cat_array %}
+						{% if child.category ~ parent.category not in unique_array %}
+							<tr class="bg-info">
+									<td>{{ child.category }}</td>
+									<td>{{ parent.category }}</td>
+									<td>
+										<a href="categories.php?edit={{ child.id }}" class="btn btn-xs btn-default">
+											<span class="glyphicon glyphicon-pencil"></span>
+										</a>
+										<a href="categories.php?delete={{ child.id }}" class="btn btn-xs btn-default">
+											<span class="glyphicon glyphicon-remove-sign"></span>
+										</a>
+									</td>
+							</tr>
+						{% set unique_array = unique_array|merge([child.category ~ parent.category]) %}
+						{% endif %}
+					{% endfor %}
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	
+	</div>
+</div>

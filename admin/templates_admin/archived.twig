@@ -1,0 +1,28 @@
+<h2 class="text-center">Archived Products</h2>
+	
+	<div class="container">
+		<table class="table table-bordered table-condensed table-striped">
+			
+			<thead>
+				<th></th>	<th>Product</th>	<th>Price</th>	<th>List Price</th> <th>Category</th>
+			</thead>
+		
+			<tbody>
+				{% for archived in archived_array %}
+		
+					<tr>
+						<td align="center">
+							<a href="archived.php?restore={{ archived.id }}" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-refresh"></span>
+							</a>
+						</td>
+						<td>{{ archived.title }}</td>
+						<td>{{ archived.price | money }}</td>
+						<td>{{ archived.list_price | money }}</td>
+						<td>{{ archived.category }}</td>
+					</tr>
+		
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>

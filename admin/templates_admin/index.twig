@@ -1,0 +1,93 @@
+<div class="container">
+<div class="row">
+	<!-- ORDERS TO COMPLETE -->
+	<div class="col-md-12">
+		<h3 class="text-center">Orders to Ship</h3>
+		<table class="table table-condensed table-bordered table-striped">
+			<thead>
+				<th></th>  <th>Name</th>  <th>Description</th>  <th>Total</th>  <th>Date</th>
+			</thead>
+			<tbody>
+			{% for order in orders %}
+				<tr>
+					<td class="text-center"><a href="orders.php?txn_id={{ order.id }}" class="btn btn-xs btn-info">Details	</a></td>
+					<td>{{ order.full_name }}</td>
+					<td>{{ order.description }}</td>
+					<td>{{ order.grand_total | money}}</td>
+					<td>{{ order.tctn_date | pretty_date }}</td>
+				</tr>
+			{% endfor%}
+			</tbody>
+		</table>
+	</div>
+
+
+<!-- SALES BY MONTH -->
+	<div class="col-md-4">
+		<h3 class="text-center">Sales By Month</h3>
+		<table class="table table-condensed table-striped table-bordered">
+			<thead>
+				<th></th>
+				<th>{{ lastYr }}</th>
+				<th>{{ thisYr }}</th>
+			</thead>
+			<tbody>
+			{% for key, value in merged_array %} 
+				{% if currentMonth(key) == true %}
+					<tr class="info">
+				{% else  %} 	
+					<tr>
+				{% endif  %} 
+					<td>{{ key | month }}</td>
+					<td>
+						{{ value.lastYrMonth | money }}
+					</td>
+					<td>
+						{{ value.currentYrMonth | money }}
+					</td>
+				</tr>
+			{% endfor %}
+				<tr>
+					<td>Total</td>
+					<td>{{ lastTotal | money }}</td>
+					<td>{{ currentTotal | money }}</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+<!-- Low inventory -->
+	<div class="col-md-8">
+		<h3 class="text-center">Low Inventory</h3>
+		<table class="table table-condensed table-striped table-bordered">
+			
+			<thead>
+				<th>Product</th>
+				<th>Category</th>
+				<th>Size</th>
+				<th>Quantity</th>
+				<th>Threshold</th>
+			</thead>
+			
+			<tbody>
+			{% for item in lowItems %}
+					{% if item.quantity == 0 %}
+					<tr class="danger">
+					{% else %}
+					<tr>
+					{% endif %}
+						<td>{{ item.title }}</td>
+						<td>{{ item.category }}</td>
+						<td>{{ item.size }}</td>
+						<td>{{ item.quantity }}</td>
+						<td>{{ item.threshold }}</td>
+				</tr>
+			{% endfor %}
+			</tbody>
+
+		</table>
+	</div>
+
+</div>
+</div>

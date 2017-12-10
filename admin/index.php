@@ -9,6 +9,14 @@ if(!is_logged_in())
 include "includes/head.php";
 include "includes/navigation.php";
 
+//rednu du template
+$loader = new Twig_Loader_Filesystem('templates_admin');
+$twig = new Twig_Environment($loader, [
+		'cache' => false
+	]);
+
+$twig->addExtension(new MonExtension());
+
 ?>
 
 
@@ -32,27 +40,16 @@ $txnQuery = "	SELECT
 				ORDER BY t.tctn_date";
 
 $txnResults = $db->query($txnQuery);
+$orders = array();
+while($order = mysqli_fetch_assoc($txnResults))
+{
+	$orders[] = $order;
+}
+
+
 
 ?>
-<div class="col-md-12">
-	<h3 class="text-center">Orders to Ship</h3>
-	<table class="table table-condensed table-bordered table-striped">
-		<thead>
-			<th></th>  <th>Name</th>  <th>Description</th>  <th>Total</th>  <th>Date</th>
-		</thead>
-		<tbody>
-		<?php while($order = mysqli_fetch_assoc($txnResults)): ?>
-			<tr>
-				<td class="text-center"><a href="orders.php?txn_id=<?=$order['id'];?>" class="btn btn-xs btn-info">Details</a></td>
-				<td><?=$order['full_name'];?></td>
-				<td><?=$order['description'];?></td>
-				<td><?=money($order['grand_total']);?></td>
-				<td><?=pretty_date($order['tctn_date']);?></td>
-			</tr>
-		<?php endwhile; ?>
-		</tbody>
-	</table>
-</div>
+
 
 <div clas="row">
 	<!-- SALES BY MONTH -->
@@ -67,6 +64,8 @@ $txnResults = $db->query($txnQuery);
 	$last = array();
 	$currentTotal = 0;
 	$lastTotal = 0;
+
+	//remplissage du tableau current. Il ne contient que les clefs des mois ou il y a eu des ventes, donc les clefs peuvent commencer à 6,11 ou 12.
 	while($x = mysqli_fetch_assoc($thisYrQ))
 	{
 		$month = date("m", strtotime($x['tctn_date']));
@@ -81,11 +80,28 @@ $txnResults = $db->query($txnQuery);
 	
 		$currentTotal += $x['grand_total'];
 	}
-	
+
+	//remplissage des clefs du tableau manquante en leur donnant la valeur 0
+	for($i = 1; $i <= 12; $i++)
+	{
+		if(array_key_exists($i, $current))
+		{
+
+		}
+		else
+		{
+			$current[$i] = floatval(0);
+		}
+	}
+	//tri du tableau par clefs ASC
+	ksort($current);
+
+
+	//remplissage du tableau last. Il ne contient que les clefs des mois ou il y a eu des ventes, donc les clefs peuvent commencer à 6,11 ou 12.
 	while($y = mysqli_fetch_assoc($lastYrQ))
 	{
 		$month = date("m", strtotime($y['tctn_date']));
-		if(!array_key_exists($month, $current))
+		if(!array_key_exists($month, $last))
 		{
 			$last[(int)$month] = $y['grand_total'];
 		}
@@ -96,35 +112,39 @@ $txnResults = $db->query($txnQuery);
 	
 		$lastTotal += $y['grand_total'];
 	}
-	
-	?>
-	<div class="col-md-4">
-		<h3 class="text-center">Sales By Month</h3>
-		<table class="table table-condensed table-striped table-bordered">
-			<thead>
-				<th></th>
-				<th><?=$lastYr;?></th>
-				<th><?=$thisYr;?></th>
-			</thead>
-			<tbody>
-			<?php 	for($i = 1; $i <= 12; $i++): 
-					$dt = DateTime::createFromFormat('!m', $i);
-			?>
-				<tr<?=((date("m") == $i)?' class="info"':'');?>>
-					<td><?=$dt->format("F");?></td>
-					<td><?=((array_key_exists($i, $last))?money($last[$i]):money(0));?></td>
-					<td><?=((array_key_exists($i, $current))?money($current[$i]):money(0));?></td>
-				</tr>
-			<?php endfor; ?>
-				<tr>
-					<td>Total</td>
-					<td><?=money($lastTotal);?></td>
-					<td><?=money($currentTotal);?></td>
-				</tr>
-			</tbody>
-		</table>
 
-	</div>
+
+	//remplissage des clefs du tableau manquante en leur donnant la valeur 0
+	for($i = 1; $i <= 12; $i++)
+	{
+		if(array_key_exists($i, $last))
+		{
+	
+		}
+		else
+		{
+			$last[$i] = floatval(0);
+		}
+	}
+	//tri du tableau par clefs ASC
+	ksort($last);
+
+
+	//on combine les deux tableau (vente par lois de l'année derniere, et de cette anée pour boucler dessus avec twig)
+	$merged_array = [];
+
+	for($i = 1; $i <= 12; $i++)
+	{
+		$merged_array[$i] = [
+			'lastYrMonth' => $last[$i],
+			'currentYrMonth' => $current[$i]
+		];
+	}
+
+
+
+
+	?>
 
 	<!--Inventory -->
 	<?php
@@ -149,45 +169,19 @@ $txnResults = $db->query($txnQuery);
 				$lowItems[] = $item;
 			}
 		}
-	}
-
-	?>
-	<div class="col-md-8">
-		<h3 class="text-center">Low Inventory</h3>
-		<table class="table table-condensed table-striped table-bordered">
-			
-			<thead>
-				<th>Product</th>
-				<th>Category</th>
-				<th>Size</th>
-				<th>Quantity</th>
-				<th>Threshold</th>
-			</thead>
-			
-			<tbody>
-			<?php foreach($lowItems as $item): ?>
-				<tr<?=(($item['quantity'] == 0)?' class="danger"':'');?>>
-					<td><?=$item['title'];?></td>
-					<td><?=$item['category'];?></td>
-					<td><?=$item['size'];?></td>
-					<td><?=$item['quantity'];?></td>
-					<td><?=$item['threshold'];?></td>
-				</tr>
-			<?php endforeach; ?>
-			</tbody>
-
-		</table>
-	</div>
-</div>
+	}	
 
 
+	echo $twig->render('index.twig', [
+		'orders' => $orders, // les commandes à expedier
+		'thisYr' => $thisYr, //cette année
+		'lastYr' => $lastYr, // l'année dernière
+		'merged_array' => $merged_array, //tableau contenant les somme par mois, pour cette année, et celle d'avant
+		'currentTotal' => $currentTotal, // total des sommes de cette année
+		'lastTotal' => $lastTotal,	//total des sommes de l'année dernière
+		'lowItems' => $lowItems //les produits qui sont en dessous du seuil critique
+	]);
 
 
-
-
-
-
-
-<?php
 include "includes/footer.php";
 ?>

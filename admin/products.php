@@ -7,6 +7,14 @@ if(!is_logged_in())
 include 'includes/head.php';
 include 'includes/navigation.php';
 
+//rednu du template
+$loader = new Twig_Loader_Filesystem('templates_admin');
+$twig = new Twig_Environment($loader, [
+		'cache' => false
+	]);
+
+$twig->addExtension(new MonExtension());
+
 /********************************************************************************************
 **************************** SUPPRESSION PRODUIT   ******************************************
 ********************************************************************************************/
@@ -23,8 +31,36 @@ $dbpath = '';
 /********************************************************************************************
 ****************************    AJOUT PRODUIT   *********************************************
 ********************************************************************************************/
-if(isset($_GET['add']) || isset($_GET['edit'])) {
+$get_add = false;
+$get_edit = false;
+$edit_id = '';
+$title = '';
+$brand = '';
+$brand_array = [];
+$parent = '';
+$parent_array = [];
+$price = '';
+$list_price = '';
+$sizes = '';
+$saved_image = '';
+$image_array = [];
+$description = '';
+$sArray = [];
+$qArray = [];
+$tArray = [];
+$product_array = [];
 
+if(isset($_GET['edit']))
+{
+	$get_edit = true;
+}
+if(isset($_GET['add']))
+{
+	$get_add = true;
+}
+
+if(isset($_GET['add']) || isset($_GET['edit'])) 
+{
 	$brand_query = $db->query("SELECT * FROM brand ORDER BY brand");
 	$parent_query = $db->query("SELECT * FROM categories WHERE parent = 0 ORDER BY category");
 	$title = ((isset($_POST['title']) && $_POST['title'] != '')?sanitize($_POST['title']):'');
@@ -76,9 +112,6 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 		
 		//$sizeString = rtrim($sizeString,',');  j'enleve la virgule a la fin de la chaine en JavaScript dans lefooter dans la fonction updateSizes();
 		$sizesArray = explode(',', $sizeString);
-		$sArray = array();
-		$qArray = array();
-		$tArray = array();
 		foreach($sizesArray as $ss) 
 		{
 			$s = explode(':', $ss);
@@ -195,181 +228,27 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 
 
 	}
-?>
-	
-	<h2 class="text-center"><?=((isset($_GET['edit']))?'Edit':'Add a new'); ?> Product</h2><hr>
 
-	<form action="products.php?<?=((isset($_GET['edit']))?'edit='.$edit_id:'add=1'); ?>" method="post" enctype="multipart/form-data">
-		
-		<div class="form-group col-md-3">
-			<label for="title">Title* :</label>
-			<input 	type="text" 
-					name="title" 
-					id="title" 
-					class="form-control"
-					value="<?=$title;?>">
-		</div>
+	while($b = mysqli_fetch_assoc($brand_query)) 
+	{ 
+		$brand_array[] = $b;
+	} 
 
-		<div class="form-group col-md-3">
-			<label for="brand">Brand* :</label>
-			<select class="form-control" id="brand" name="brand">
-				<option value="" <?=(($brand == '')?'selected':''); ?>></option>
-					<?php 
-					while($b = mysqli_fetch_assoc($brand_query)) 
-					{ ?>
-						<option 
-							value="<?=$b['id'];?>"<?=(($brand == $b['id'])?' selected':'') ?>><?=$b['brand'];?>
-						</option>
-					<?php	
-					} 
-					?>
-			</select>
-		</div>
+	while( $p = mysqli_fetch_assoc($parent_query)) 
+	{
+		$parent_array[] = $p;
+	} 
 
-		<div class="form-group col-md-3">
-			<label for="parent">Parent Category* :</label>
-			<select class="form-control" id="parent" name="parent">
-				<option value="" <?=(($parent == "")?'selected':'') ?>></option>
-				<?php
-				while( $p = mysqli_fetch_assoc($parent_query)) 
-				{?>
-					<option value="<?=$p['id'];?>"<?=(($parent == $p['id'])?' selected':'');?>
-					>
-					<?=$p['category']; ?>
-					</option>
-				<?php } ?>
-			</select>
-		</div>
-		<div class="form-group col-md-3">
-			<label for="child">Child Categories* :</label>
-			<select class="form-control" id="child" name="child">
+
 				
-			</select>
-		</div>
-		<div class="form-group col-md-3">
-			<label for="price">Price* :</label>
-			<input 	type="text" 
-					name="price" 
-					id="price" 
-					class="form-control" 
-					value="<?=$price ?>">
-		</div>
-		<div class="form-group col-md-3">
-			<label for="list_price">List Price :</label>
-			<input 	type="text" 
-					name="list_price" 
-					id="list_price" 
-					class="form-control" 
-					value="<?=$list_price ?>">
-		</div>
-		<div class="form-group col-md-3">
-			<label for>Quantity & Sizes* :</label>
-			<button class="btn btn-default form-control" 
-					onclick="$('#sizesModal').modal('toggle');return false">
-				Quantity & Sizes
-			</button>
-		</div>
-		<div class="form-group col-md-3">
-			<label for="sizes">Sizes & Quantity Preview</label>
-			<input 	type="text" 
-					name="sizes" 
-					id="sizes"
-					class="form-control" 
-					value="<?=$sizes ?>"
-					readonly>
-		</div>
-		<div class="form-group col-md-6">
-			<?php if($saved_image != ""): ?>
-				<?php
-					$imgi = 1;
-					$images = explode(',', $saved_image);
-					foreach($images as $image):
-				?>
-						<div class="saved-image col-md-4">
-							<img src="<?=$image;?>" alt="Saved Image"><br>
-							<a 
-							href="products.php?delete_image=1&edit=<?=$edit_id;?>&imgi=<?=$imgi;?>" 
-							class="text-danger">
-								Delete Image
-							</a>
-						</div>
-					<?php 
-					$imgi++;
-					endforeach;?>
-			<?php else: ?>
-			<label for="photo">Product Photo* :</label>
-			<input type="file" name="photo[]" id="photo" class="form-control" multiple>
-		<?php endif; ?>
-		</div>
-		<div class="form-group col-md-6">
-			<label for="description">Description* :</label>
-			<textarea id="description" name="description" rows="6" class="form-control">
-				<?=$description ?>
-			</textarea>
-		</div>
-		<div class="col-md-2 pull-right">
-			<a href="products.php" class="btn btn-default">Cancel</a>
-			<input type="submit" name="submit"
-				value="<?=((isset($_GET['edit']))?'Edit':'Add'); ?> Product" class="btn btn-success">
-		</div><div class="clearfix"></div>
-	</form>
+		$imgi = 1;
+		$images = explode(',', $saved_image);
+		foreach($images as $image)
+		{
+			$image_array[] = $image;
+		}
 
-	<!-- *********** MODAL FOR SIZES OF ADDI?G PRODUCT ******************** -->
-<div class="modal fade" id="sizesModal" tabindex="-1" role="dialog" aria-labelledby="sizesModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="sizesModalLabel">Size & Quantity</h4>
-      </div>
-      <div class="modal-body">
-      	<div class="container-fluid">
-        <?php for($i = 1; $i <= 5; $i++): ?>
-        	<div class="form-group col-md-4">
-        		<label for="size<?=$i;?>">Size</label>
-        		<input 
-        			type="text" 
-        			name="size<?=$i;?>" 
-        			id="size<?=$i;?>" 
-        			value="<?=((!empty($sArray[$i-1]))?$sArray[$i-1]:''); ?>" 
-        			class="form-control">
-        	</div>
-
-        	<div class="form-group col-md-4">
-        		<label for="qty<?=$i;?>">Quantity</label>
-        		<input 
-        			type="number" 
-        			name="qty<?=$i;?>" 
-        			id="qty<?=$i;?>" 
-        			value="<?=((!empty($qArray[$i-1]))?$qArray[$i-1]:''); ?>" 
-        			min="0" 
-        			class="form-control">
-        	</div>
-
-        	<div class="form-group col-md-4">
-        		<label for="threshold<?=$i;?>">Threshold</label>
-        		<input 
-        			type="number" 
-        			name="threshold<?=$i;?>" 
-        			id="threshold<?=$i;?>" 
-        			value="<?=((!empty($tArray[$i-1]))?$tArray[$i-1]:''); ?>" 
-        			min="0" 
-        			class="form-control">
-        	</div>
-        <?php endfor; ?>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" 
-        	onclick="updateSizes();jQuery('#sizesModal').modal('toggle');return false;">
-        	Save changes
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- *********** END MODAL FOR SIZES OF ADDI?G PRODUCT ******************** -->
+?>
 
 <!-- *********** END ADD PRODUCT ******************** -->
 <?php
@@ -387,61 +266,82 @@ if(isset($_GET['add']) || isset($_GET['edit'])) {
 		$db->query($featured_sql);
 		header('Location: products.php');
 	}
-	?>
-	
-	<h2 class="text-center">Products</h2>
-	
-			<a href="products.php?add=1" class="btn btn-success pull-right" id="add-product-btn">Add New Product</a>
-		<div class="clearfix"></div>
-	<hr>
-	
-	<div class="container">
-		<table class="table table-bordered table-condensed table-striped">
-			
-			<thead>
-				<th></th>	<th>Product</th>	<th>Price</th>	<th>List Price</th> <th>Category</th>	<th>Featured</th>		<th>Sold</th>
-			</thead>
-		
-			<tbody>
-				<?php 
-					while($product = mysqli_fetch_assoc($products)) { 
-						$child_id = (int)$product['categories'];
-						
-						$category = get_category($child_id);
-						$category = $category['parent'].'~'.$category['child'];
-				?>
-		
-					<tr>
-						<td align="center">
-							<a href="products.php?edit=<?=$product['id']; ?>" class="btn btn-xs btn-default">
-								<span class="glyphicon glyphicon-pencil"></span>
-							</a>
-							<a href="products.php?delete=<?=$product['id']; ?>" class="btn btn-xs btn-default">
-								<span class="glyphicon glyphicon-remove"></span>
-							</a>
-						</td>
-						<td><?=$product['title']; ?></td>
-						<td><?=money($product['price']); ?></td>
-						<td><?=money($product['list_price']); ?></td>
-						<td><?=$category; ?></td>
-						<td>
-							<a href="products.php?featured=<?=(($product['featured'] == 0)?'1':'0');?>&id=<?=$product['id'	];?>" class="btn btn-xs btn-default"><span class="glyphicon glyphicon-<?=(($product['featured'] == 1)?'minus':'plus') ;?>""></span>
-							</a>
-							&nbsp <?=(($product['featured'] == 1)?'Featured Product':'Not Featured') ?>
-						</td>
-						<td><?=$product['sold']; ?></td>
-					</tr>
-		
-				<?php } ?>
-			</tbody>
-		</table>
-	</div>
-	
-	
-	
-	
-<?php
+
+
+
+while($product = mysqli_fetch_assoc($products)) { 
+
+	$product_array[] = $product;
+
 }
+
+$count_array = count($product_array);
+
+//echo $count_array;
+
+for($i = 0; $i < $count_array; $i++)
+{
+	$category_id = $product_array[$i]['categories'];
+	$category_id = (int)$category_id;
+	$category = get_category($category_id);
+	$category = $category['parent'].' ~ '. $category['child'];
+	$product_array[$i]['category'] = $category;
+}
+
+//echo '<pre>';
+//var_dump($product_array);
+//echo '</pre>';
+//	
+
+	
+}
+
+//i need to make 1 array of sArray, qArray and tArray so i can loop on it with twig and get values
+$size_qty_threshold_array = [];
+
+for($i = 0; $i < 5; $i++)
+{
+	if(array_key_exists($i, $sArray))
+	{
+		$size_qty_threshold_array[$i] = [
+			'size' => $sArray[$i],
+			'qty' => $qArray[$i],
+			'threshold' => $tArray[$i]
+		];
+	} else {
+		$size_qty_threshold_array[$i] = [
+			'size' => '',
+			'qty' => '',
+			'threshold' => ''
+		];
+	}
+	
+}
+
+echo $twig->render('products.twig', [
+		'product_array' => $product_array,
+		'get_edit' => $get_edit,
+		'get_add' => $get_add,
+		'edit_id' => $edit_id,
+		'title' => $title,
+		'brand' => $brand,
+		'brand_array' => $brand_array,
+		'parent' => $parent,
+		'parent_array' => $parent_array,
+		'price' => $price,
+		'list_price' => $list_price,
+		'sizes' => $sizes,
+		'saved_image' => $saved_image,
+		'image_array' => $image_array,
+		'description' => $description,
+		'size_qty_threshold_array' => $size_qty_threshold_array,
+	]);	
+
+
+
+//echo '<pre>';
+//var_dump($size_qty_threshold_array);
+//echo '</pre>';
 
 
 include 'includes/footer.php';

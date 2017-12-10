@@ -9,6 +9,15 @@ if(!is_logged_in())
 include 'includes/head.php';
 include 'includes/navigation.php';
 
+//rednu du template
+$loader = new Twig_Loader_Filesystem('templates_admin');
+$twig = new Twig_Environment($loader, [
+		'cache' => false
+	]);
+
+$twig->addExtension(new MonExtension());
+
+	
 //complete order
 if(isset($_GET['complete']) && $_GET['complete'] == 1)
 {
@@ -61,72 +70,11 @@ while($p = mysqli_fetch_assoc($productQ))
 	$products[] = array_merge($x, $p);
 }
 
-?>
-
-<h2 class="text-center">Items Ordered</h2>
-
-<table class="table table-condensed table-bordered table-striped">
-	<thead>
-		<th>Quantity</th>	<th>Title</th>	<th>Category</th>	<th>Size</th>
-	</thead>
-	<tbody>
-		<?php foreach($products as $product):?>
-			<tr>
-				<td><?=$product['quantity'];?></td>
-				<td><?=$product['title'];?></td>
-				<td><?=$product['parent'].'~'.$product['child'];?></td>
-				<td><?=$product['size'];?></td>
-			</tr>
-		<?php endforeach;?>
-	</tbody>
-</table>
-
-<div class="row">
-	<div class="col-md-6">
-		<h3 class="text-center">Orders Details</h3>
-		<table class="table table-condensed table-bordered table-striped">
-			<tbody>
-				<tr>
-					<td>Sub Total</td>
-					<td><?=money($txn['sub_total']);?></td>
-				</tr>
-				<tr>
-					<td>Tax</td>
-					<td><?=money($txn['tax']);?></td>
-				</tr>
-				<tr>
-					<td>Grand Total</td>
-					<td><?=money($txn['grand_total']);?></td>
-				</tr>
-				<tr>
-					<td>Order Date</td>
-					<td><?=pretty_date($txn['tctn_date']);?></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-
-	<div class="col-md-6">
-		<h3 class="text-center">Shipping Address</h3>
-		<address>
-			<?=$txn['full_name'];?><br>
-			<?=$txn['street'];?><br>
-			<?=(($txn['street2'] != "")?$txn['street2'].'<br>':'');?>
-			<?=$txn['city'].', '.$txn['state'].' '.$txn['zip_code'];?><br>
-			<?=$txn['country'];?><br>
-		</address>
-	</div>
-
-	<div class="pull-right" style="margin-right: 50px;">
-		<a href="index.php" class="btn btn-large btn-default">Cancel</a>
-		<a href="orders.php?complete=1&cart_id=<?=$cart_id;?>" class="btn btn-primary btn-large">Complete order</a>
-	</div>
-</div>
+echo $twig->render('orders.twig', [
+		'products' => $products,
+		'txn' => $txn
+	]);
 
 
-
-
-
-<?php
 include 'includes/footer.php';
 ?>

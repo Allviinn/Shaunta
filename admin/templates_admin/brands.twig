@@ -1,0 +1,57 @@
+<h2 class="text-center">Brands</h2><hr>
+
+<!-- FORMULAIRE BRAND -->
+<div class="text-center">
+{% if get_edit == true %}
+	<form class="form-inline" action="brands.php?edit={{ edit_id }}" method="post">
+{% else %}
+	<form class="form-inline" action="brands.php" method="post">
+{% endif %}
+		<div class="form-group">
+		
+			
+			<label for="brand">
+			{% if get_edit == true %}
+				Edit
+			{% else %}
+				Add a
+			{% endif %}
+			Brand :</label>
+			<input 	type="text" 
+					name="brand" 
+					id="brand" 
+					class="form-control" 
+					value="{{ brand_value }}"
+			>
+			{% if get_edit == true %}
+				<a href="brands.php" class="btn btn-default">Cancel</a>
+				<input type="submit" name="add_submit" value="Edit Brand" class="btn btn-success">
+			{% else %}
+				<input type="submit" name="add_submit" value="Add Brand" class="btn btn-success">
+			{% endif %}
+		</div>
+	</form>
+</div><hr>
+
+<table class="table table-bordered table-striped table-auto table-condensed">
+	<thead>
+		<th></th>	<th>Brands</th>	<th></th>
+	</thead>
+	<tbody>
+		{% for brand_result in brand_results %}
+			<tr>
+				<td>
+					<a href="brands.php?edit={{ brand_result.id }}" class="btn btn-xs btn-default">
+						<span class="glyphicon glyphicon-pencil"></span>
+					</a>
+				</td>
+				<td>{{ brand_result.brand }}</td>
+				<td>
+					<a href="brands.php?delete={{ brand_result.id }}" class="btn btn-xs btn-default">
+						<span class="glyphicon glyphicon-remove-sign"></span>
+					</a>
+				</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+</table>

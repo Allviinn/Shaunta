@@ -1,0 +1,237 @@
+<!-- SI IL N'Y A PAS DE VARIALBE EN GET ON AFFICHE LA LISTE DES PRODUITS -->
+
+{% if get_edit == false and get_add == false %}
+<h2 class="text-center">Products</h2>
+
+<a href="products.php?add=1" class="btn btn-success pull-right" id="add-product-btn">Add New Product</a>
+		<div class="clearfix"></div>
+	<hr>
+	
+	<div class="container">
+		<table class="table table-bordered table-condensed table-striped">
+			
+			<thead>
+				<th></th>	<th>Product</th>	<th>Price</th>	<th>List Price</th> <th>Category</th>	<th>Featured</th>		<th>Sold</th>
+			</thead>
+		
+			<tbody>
+				{% for product in product_array %}
+					<tr>
+						<td align="center">
+							<a href="products.php?edit={{ product.id }}" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</a>
+							<a href="products.php?delete={{ product.id }}" class="btn btn-xs btn-default">
+								<span class="glyphicon glyphicon-remove"></span>
+							</a>
+						</td>
+						<td>{{ product.title }}</td>
+						<td>{{ product.price | money }}</td>
+						<td>{{ product.list_price | money }}</td>
+						<td>{{ product.category }}</td>
+						<td>
+							{% if product.featured == 0 %}
+								<a href="products.php?featured=1&id={{ product.id }}" class="btn btn-xs btn-default">
+									<span class="glyphicon glyphicon-plus"></span>
+								</a>
+								&nbsp Not Featured
+							{% elseif product.featured == 1 %}
+								<a href="products.php?featured=0&id={{ product.id }}" class="btn btn-xs btn-default">
+									<span class="glyphicon glyphicon-minus"></span>
+								</a>
+								&nbsp Featured
+							{% endif %}
+						</td>
+						<td>{{ product.sold }}</td>
+					</tr>
+		
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% else %}
+
+<!-- SI IL Y A DES VARIALES EN GET ON AFFICHE LE FORMULAIRE D'AJOUT OU DE MODIF DE PRODUIT -->
+	{% if get_edit == true %}
+		<h2 class="text-center">Edit Product</h2><hr>
+		<form action="products.php?edit={{ edit_id }}" method="post" enctype="multipart/form-data">
+	{% elseif get_add == true %}
+		<h2 class="text-center">Add a Product</h2><hr>
+		<form action="products.php?add=1" method="post" enctype="multipart/form-data">
+	{% endif %}
+		
+		<div class="form-group col-md-3">
+			<label for="title">Title* :</label>
+			<input 	type="text" 
+					name="title" 
+					id="title" 
+					class="form-control"
+					value="{{ title }}">
+		</div>
+
+		<div class="form-group col-md-3">
+			<label for="brand">Brand* :</label>
+			<select class="form-control" id="brand" name="brand">
+				{% if brand == '' %}
+					<option value="" selected></option>
+				{% else %}
+					<option value=""></option>
+				{% endif %}
+
+				{% for brand_value in brand_array %}
+
+					{% if brand == brand_value.id %}
+						<option value="{{ brand_value.id }}" selected>{{ brand_value.brand }}</option>
+					{% else  %}
+						<option value="{{ brand_value.id }}">{{ brand_value.brand }}</option>
+					{% endif %}
+
+				{% endfor %}
+			</select>
+		</div>
+
+		<div class="form-group col-md-3">
+			<label for="parent">Parent Category* :</label>
+			<select class="form-control" id="parent" name="parent">
+				{% if parent == '' %}
+					<option value="" selected></option>
+				{% else %}
+					<option value=""></option>
+				{% endif %}
+				
+				{% for parent_value in parent_array %} 
+					
+					{% if parent == parent_value.id %}
+						<option value="{{ parent_value.id }}" selected>{{ parent_value.category }}</option>
+					{% else  %}
+						<option value="{{ parent_value.id }}">{{ parent_value.category }}</option>
+					{% endif %}
+
+				{% endfor %}
+			</select>
+		</div>
+		<div class="form-group col-md-3">
+			<label for="child">Child Categories* :</label>
+			<select class="form-control" id="child" name="child">
+				
+			</select>
+		</div>
+		<div class="form-group col-md-3">
+			<label for="price">Price* :</label>
+			<input 	type="text" 
+					name="price" 
+					id="price" 
+					class="form-control" 
+					value="{{ price }}">
+		</div>
+		<div class="form-group col-md-3">
+			<label for="list_price">List Price :</label>
+			<input 	type="text" 
+					name="list_price" 
+					id="list_price" 
+					class="form-control" 
+					value="{{ list_price }}">
+		</div>
+		<div class="form-group col-md-3">
+			<label for>Quantity & Sizes* :</label>
+			<button class="btn btn-default form-control" 
+					onclick="$('#sizesModal').modal('toggle');return false">
+				Quantity & Sizes
+			</button>
+		</div>
+		<div class="form-group col-md-3">
+			<label for="sizes">Sizes & Quantity Preview</label>
+			<input 	type="text" 
+					name="sizes" 
+					id="sizes"
+					class="form-control" 
+					value="{{ sizes }}"
+					readonly>
+		</div>
+		<div class="form-group col-md-6">
+			{% if saved_image != '' %}
+			
+				{% for image in image_array %}
+					<div class="saved-image col-md-4">
+						<img src="{{ image }}" alt="Saved Image"><br>
+						<a 
+						href="products.php?delete_image=1&edit={{ edit_id }}&imgi={{ loop.index }}" 
+						class="text-danger">
+							Delete Image
+						</a>
+					</div>
+				{% endfor %}
+
+			{% else %}
+				<label for="photo">Product Photo* :</label>
+				<input type="file" name="photo[]" id="photo" class="form-control" multiple>
+			{% endif %}
+		</div>
+		<div class="form-group col-md-6">
+			<label for="description">Description* :</label>
+			<textarea id="description" name="description" rows="6" class="form-control">
+				{{ description }}
+			</textarea>
+		</div>
+		<div class="col-md-2 pull-right">
+			<a href="products.php" class="btn btn-default">Cancel</a>
+			{% if get_edit == true %}
+				<input type="submit" name="submit" value="Edit Product" class="btn btn-success">
+			{% elseif get_add == true %}
+				<input type="submit" name="submit" value="Add Product" class="btn btn-success">
+			{% endif %}
+
+		</div><div class="clearfix"></div>
+	</form>
+	<!-- *********** MODAL FOR SIZES OF ADDING PRODUCT ******************** -->
+	<div class="modal fade" id="sizesModal" tabindex="-1" role="dialog" aria-labelledby="sizesModalLabel" aria-hidden="true">
+  		<div class="modal-dialog modal-lg" role="document">
+    		<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        			<h4 class="modal-title" id="sizesModalLabel">Size & Quantity</h4>
+      			</div>
+      			<div class="modal-body">
+      				<div class="container-fluid">
+      			  		{% for size_qty_thr in size_qty_threshold_array %}
+      			  			<div class="form-group col-md-4">
+      			  				<label for="size{{ loop.index }}">Size</label>
+      			  				{% if size_qty_thr %}
+      			  					<input type="text" name="size{{ loop.index }}" id="size{{ loop.index }}" value="{{ size_qty_thr.size }}"class="form-control">
+      			  				{% else %}
+      			  					<input type="text" name="size{{ loop.index }}" id="size{{ loop.index }}" value="" class="form-control">
+      			  				{% endif %}
+      			  			</div>
+			
+      			  			<div class="form-group col-md-4">
+      			  				<label for="qty{{ i }}">Quantity</label>
+      			  				{% if size_qty_thr %}
+      			  					<input type="text" name="qty{{ loop.index }}" id="qty{{ loop.index }}" value="{{ size_qty_thr.qty }}"class="form-control">
+      			  				{% else %}
+      			  					<input type="text" name="qty{{ loop.index }}" id="qty{{ loop.index }}" value="" class="form-control">
+      			  				{% endif %}
+      			  			</div>
+			
+      			  			<div class="form-group col-md-4">
+      			  				<label for="threshold{{ i }}">Threshold</label>
+      			  				{% if size_qty_thr %}
+      			  					<input type="text" name="threshold{{ loop.index }}" id="threshold{{ loop.index }}" value="{{ size_qty_thr.threshold }}"class="form-control">
+      			  				{% else %}
+      			  					<input type="text" name="threshold{{ loop.index }}" id="threshold{{ loop.index }}" value="" class="form-control">
+      			  				{% endif %}
+      			  			</div>
+      			  		{% endfor %}
+      			  	</div>
+      			</div>
+     			<div class="modal-footer">
+     			  	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+     			  	<button type="button" class="btn btn-primary" 
+     			  	onclick="updateSizes();jQuery('#sizesModal').modal('toggle');return false;">
+     			  		Save changes
+     			  	</button>
+     			</div>
+    		</div>
+  		</div>
+	</div>
+<!-- *********** END MODAL FOR SIZES OF ADDI?G PRODUCT ******************** -->
+{% endif %}

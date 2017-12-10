@@ -1,0 +1,62 @@
+<h2 class="text-center">Items Ordered</h2>
+<div class="container">
+	<table class="table table-condensed table-bordered table-striped">
+		<thead>
+			<th>Quantity</th>	<th>Title</th>	<th>Category</th>	<th>Size</th>
+		</thead>
+		<tbody>
+			{% for product in products %}
+				<tr>
+					<td>{{ product.quantity }}</td>
+					<td>{{ product.title }}</td>
+					<td>{{ product.parent }} ~ {{ product.child }}</td>
+					<td>{{ product.size }}</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	
+	<div class="row">
+		<div class="col-md-6">
+			<h3 class="text-center">Orders Details</h3>
+			<table class="table table-condensed table-bordered table-striped">
+				<tbody>
+					<tr>
+						<td>Sub Total</td>
+						<td>{{ txn.sub_total | money }}</td>
+					</tr>
+					<tr>
+						<td>Tax</td>
+						<td>{{ txn.tax | money }}</td>
+					</tr>
+					<tr>
+						<td>Grand Total</td>
+						<td>{{ txn.grand_total | money }}</td>
+					</tr>
+					<tr>
+						<td>Order Date</td>
+						<td>{{ txn.tctn_date | pretty_date }}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	
+		<div class="col-md-6">
+			<h3 class="text-center">Shipping Address</h3>
+			<address>
+				{{ txn.full_name }}<br>
+				{{ txn.street }}<br>
+				{% if txn.street2 != "" %}
+					{{ txn.street2 }}, <br>
+				{% endif %}
+				{{ txn.city }}, {{ txn.state }} {{ txn.zip_code }}<br>
+				{{ txn.country }}<br>
+			</address>
+		</div>
+	
+		<div class="pull-right" style="margin-right: 50px;">
+			<a href="index.php" class="btn btn-large btn-default">Cancel</a>
+			<a href="orders.php?complete=1&cart_id=<?=$cart_id;?>" class="btn btn-primary btn-large">Complete order</a>
+		</div>
+	</div>
+</div>

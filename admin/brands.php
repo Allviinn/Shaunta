@@ -7,12 +7,25 @@ if(!is_logged_in())
 include "includes/head.php";
 include "includes/navigation.php";
 
-$brands_query = "SELECT * FROM brand ORDER BY brand";
+//rednu du template
+$loader = new Twig_Loader_Filesystem('templates_admin');
+$twig = new Twig_Environment($loader, [
+		'cache' => false
+	]);
 
-$brands_query = $db->query($brands_query);
+$twig->addExtension(new MonExtension());
+
+
+$brands_query = $db->query("SELECT * FROM brand ORDER BY brand");
+$brand_results = [];
+while($b = mysqli_fetch_assoc($brands_query))
+{
+	$brand_results[] = $b;
+}
 
 $errors = array();
 
+$edit_id = "";
 //edit Brand 
 if(isset($_GET['edit']) && !empty($_GET['edit'])) {
 
@@ -73,62 +86,28 @@ if(isset($_POST['add_submit'])) {
 		header('Location: brands.php');
 	}
 }
-?>
-<h2 class="text-center">Brands</h2><hr>
 
-<!-- FORMULAIRE BRAND -->
-<div class="text-center">
-	<form class="form-inline" action="brands.php<?=((isset($_GET['edit']))?'?edit='.$edit_id:''); ?>" method="post">
-		<div class="form-group">
-		<?php 
-			$brand_value = '';
+$get_edit = false;
+if(isset($_GET['edit']))
+{
+	$get_edit = true;
+}
 
-			if(isset($_GET['edit'])){
-				$brand_value = $edit_brand['brand'];
-			} else {
-				if(isset($_POST['brand'])) {
-					$brand_value = sanitize($_POST['brand']);
-				}
-			}
-			?>
-			<label for="brand"><?=((isset($_GET['edit']))?'Edit ':'Add a ') ; ?>Brand :</label>
-			<input 	type="text" 
-					name="brand" 
-					id="brand" 
-					class="form-control" 
-					value="<?=$brand_value ?>"
-			>
-			<?php if(isset($_GET['edit'])) { ?>
-				<a href="brands.php" class="btn btn-default">Cancel</a>
-			<?php } ?>
-			<input type="submit" name="add_submit" value="<?=((isset($_GET['edit']))?'Edit ':'Add ') ; ?> Brand" class="btn btn-success">
-		</div>
-	</form>
-</div><hr>
+$brand_value = '';
+if(isset($_GET['edit'])){
+	$brand_value = $edit_brand['brand'];
+} else {
+	if(isset($_POST['brand'])) {
+		$brand_value = sanitize($_POST['brand']);
+	}
+}
 
-<table class="table table-bordered table-striped table-auto table-condensed">
-	<thead>
-		<th></th>	<th>Brands</th>	<th></th>
-	</thead>
-	<tbody>
-		<?php while($brand_results = mysqli_fetch_assoc($brands_query)) { ?>
-			<tr>
-				<td>
-					<a href="brands.php?edit=<?=$brand_results['id']; ?>" class="btn btn-xs btn-default">
-						<span class="glyphicon glyphicon-pencil"></span>
-					</a>
-				</td>
-				<td><?=$brand_results['brand']; ?></td>
-				<td>
-					<a href="brands.php?delete=<?=$brand_results['id']; ?>" class="btn btn-xs btn-default">
-						<span class="glyphicon glyphicon-remove-sign"></span>
-					</a>
-				</td>
-			</tr>
-		<?php } ?>
-	</tbody>
-</table>
+echo $twig->render('brands.twig', [
+		'get_edit' => $get_edit,
+		'brand_value' => $brand_value,
+		'edit_id' => $edit_id,
+		'brand_results' => $brand_results
+	]);
 
-<?php
 include "includes/footer.php";
 ?>

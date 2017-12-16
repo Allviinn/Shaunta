@@ -257,7 +257,22 @@ if(isset($_GET['add']) || isset($_GET['edit']))
 ********************************************************************************************/
 } else {
 
-	$products = "SELECT * FROM products WHERE deleted != 1";
+	$count_all = $db->query("SELECT COUNT(id) as 'count_all' FROM products WHERE deleted != 1");
+	$count_all = mysqli_fetch_assoc($count_all);
+	//PAGINATION VARIABLES
+	$count_all = $count_all['count_all'];
+	//juste a chager cette varialbe nombres darticle apr pages, tout le reste de fera automatiquement
+	$per_page = 5;
+	$current_page = 1;
+	if(isset($_GET['p'])) {
+		$current_page = sanitize($_GET['p']);
+	}
+	$page_numbers = ceil($count_all / $per_page);
+
+	$down_limit = (($current_page -1) * $per_page);
+
+
+	$products = "SELECT * FROM products WHERE deleted != 1 LIMIT ".$down_limit.", ".$per_page;
 	$products = $db->query($products);
 	if(isset($_GET['featured'])) {
 		$featured_id = (int)$_GET['id'];
@@ -335,6 +350,8 @@ echo $twig->render('products.twig', [
 		'image_array' => $image_array,
 		'description' => $description,
 		'size_qty_threshold_array' => $size_qty_threshold_array,
+		'page_numbers' => $page_numbers,
+		'current_page' => $current_page
 	]);	
 
 

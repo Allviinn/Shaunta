@@ -46,8 +46,26 @@
 					</tr>
 		
 				{% endfor %}
+
 			</tbody>
 		</table>
+
+				<!-- PAGINATION -->
+				<div class="text-center">
+					<ul class="pagination">
+					{% for i in 1..page_numbers %}
+						{% if i == current_page %}
+							<li class="active">	
+						{% else %}
+							<li>
+						{% endif %}
+							<a href="products.php?p={{ i }}">{{ i }}</a></li>
+					{% endfor %}
+					</ul>
+				</div>
+
+				
+
 	</div>
 {% else %}
 

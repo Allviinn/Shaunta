@@ -41,7 +41,7 @@ function get_child_options(selected) {
 	}
 	var parent_id = $('#parent').val();
 	$.ajax({
-		url: '/e-commerce/admin/parsers/child_categories.php',
+		url: '/shaunta/admin/parsers/child_categories.php',
 		type: 'POST',
 		data : {parent_id: parent_id, selected: selected},
 		success: function(data) {

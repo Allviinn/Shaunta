@@ -32,7 +32,7 @@ function detailModal(id) {
 	
 	var data = { "id": id};
 	$.ajax({
-		url: '/e-commerce/includes/details_modal.php',
+		url: '/shaunta/includes/details_modal.php',
 		method: "post",
 		data: data,
 		success: function(data) {
@@ -50,7 +50,7 @@ function detailModal(id) {
 function update_cart(mode, edit_id, edit_size) {
 	var data = {"mode" : mode, "edit_id" : edit_id, "edit_size": edit_size};
 	$.ajax({
-		url : "/e-commerce/admin/parsers/update_cart.php",
+		url : "/shaunta/admin/parsers/update_cart.php",
 		method : "post",
 		data : data,
 		success : function(){ location.reload() },
@@ -81,7 +81,7 @@ function add_to_cart() {
 	else 
 	{
 		$.ajax({
-			url : '/e-commerce/admin/parsers/add_cart.php',
+			url : '/shaunta/admin/parsers/add_cart.php',
 			method : 'post',
 			data : data,
 			success: function() {

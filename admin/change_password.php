@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/e-commerce/core/init.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/shaunta/core/init.php';
 if(!is_logged_in())
 {
 	loggin_error_redirect();
@@ -91,9 +91,7 @@ $errors = array();
 			<input type="submit" value="Change Password" class="btn btn-primary">
 		</div>
 	</form>
-	<!--<p class="text-right">
-		<a href="/e-commerce/index.php" alt="Home">Visit Site</a>
-	</p>-->
+
 </div>
 
 

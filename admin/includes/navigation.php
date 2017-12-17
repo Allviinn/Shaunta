@@ -1,7 +1,7 @@
 <!-- *****************NAVIGATION**************** -->
 <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container">
-		<a href="/e-commerce/admin/index.php" class="navbar-brand">Shaunta's Boutique Admin</a>
+		<a href="/shaunta/admin/index.php" class="navbar-brand">Shaunta's Boutique Admin</a>
 		<ul class="nav navbar-nav">
 			<li><a href="index.php">My Dashboard</a></li>
 			<li><a href="brands.php">Brands</a></li>

@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/e-commerce/core/init.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/shaunta/core/init.php';
 if(!is_logged_in())
 {
 	login_error_redirect();
@@ -166,7 +166,7 @@ if(isset($_GET['add']) || isset($_GET['edit']))
 				{
 					$dbpath .= ',';
 				}
-				$dbpath .= '/e-commerce/images/products/'.$uploadName;
+				$dbpath .= '/shaunta/images/products/'.$uploadName;
 
 				if($mimeType != 'image')
 				{

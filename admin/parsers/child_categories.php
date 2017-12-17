@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'].'/e-commerce/core/init.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/shaunta/core/init.php';
 
 
 $parent_id = (int)$_POST['parent_id'];

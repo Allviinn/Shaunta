@@ -239,7 +239,7 @@ if($cart_id != '')
 		};
 
 		$.ajax({
-			url : "/e-commerce/admin/parsers/check_address.php",
+			url : "/shaunta/admin/parsers/check_address.php",
 			method : "post",
 			data : data,
 			success : function(data) {

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  lun. 04 déc. 2017 à 19:28
+-- Généré le :  Dim 17 déc. 2017 à 14:20
 -- Version du serveur :  5.7.19
--- Version de PHP :  5.6.31
+-- Version de PHP :  7.1.9
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  `ecommerce`
+-- Base de données :  `shaunta`
 --
 
 -- --------------------------------------------------------
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS `brand` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `brand` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `brand`
@@ -46,7 +46,8 @@ INSERT INTO `brand` (`id`, `brand`) VALUES
 (7, 'Polo'),
 (10, 'Armani'),
 (11, 'Tom Tailor'),
-(16, 'Test Join');
+(17, 'Tessst join'),
+(16, 'TestPhotos');
 
 -- --------------------------------------------------------
 
@@ -62,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `cart` (
   `paid` tinyint(4) NOT NULL DEFAULT '0',
   `shipped` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=83 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=87 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `cart`
@@ -79,7 +80,11 @@ INSERT INTO `cart` (`id`, `items`, `expire_date`, `paid`, `shipped`) VALUES
 (71, '[{\"id\":\"36\",\"size\":\"sm\",\"quantity\":\"1\"},{\"id\":\"32\",\"size\":\"sm\",\"quantity\":\"1\"},{\"id\":\"31\",\"size\":\"36\",\"quantity\":\"1\"}]', '2018-01-02 08:57:55', 1, 0),
 (72, '[{\"id\":\"35\",\"size\":\"sm\",\"quantity\":\"3\"}]', '2018-01-02 09:45:14', 1, 1),
 (81, '[{\"id\":\"27\",\"size\":\"sm\",\"quantity\":\"3\"}]', '2018-01-03 17:56:15', 1, 0),
-(82, '[{\"id\":\"35\",\"size\":\"md\",\"quantity\":\"5\"}]', '2018-01-03 18:01:26', 1, 0);
+(82, '[{\"id\":\"35\",\"size\":\"md\",\"quantity\":\"5\"}]', '2018-01-03 18:01:26', 1, 0),
+(83, '[{\"id\":\"30\",\"size\":\"36\",\"quantity\":\"2\"}]', '2018-01-05 18:37:16', 1, 0),
+(84, '[{\"id\":\"32\",\"size\":\"lg\",\"quantity\":\"3\"}]', '2018-01-08 12:30:28', 1, 0),
+(85, '[{\"id\":\"31\",\"size\":\"36\",\"quantity\":\"2\"}]', '2018-01-08 12:48:54', 1, 0),
+(86, '[{\"id\":\"29\",\"size\":\"sm\",\"quantity\":\"4\"}]', '2018-01-09 14:01:13', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -93,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `categories` (
   `category` varchar(255) NOT NULL,
   `parent` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `categories`
@@ -140,26 +145,27 @@ CREATE TABLE IF NOT EXISTS `products` (
   `deleted` int(11) NOT NULL,
   `sold` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `products`
 --
 
 INSERT INTO `products` (`id`, `title`, `price`, `list_price`, `brand`, `categories`, `image`, `description`, `featured`, `sizes`, `deleted`, `sold`) VALUES
-(27, 'Long Skirt', '19.99', '39.99', 8, '12', '/e-commerce/images/products/7e467564d1f0b630ded204e7e8c2c687.png', '								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.													', 1, 'sm:12:,md:20:,lg:35:', 0, 3),
-(28, 'Average Purse', '55.99', '74.99', 9, '18', '/e-commerce/images/products/1c966175431c4d69ff050bf279bdc480.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.							', 1, 'default:0:10', 0, 0),
-(29, 'Blouse', '9.99', '19.99', 7, '19', '/e-commerce/images/products/b904dbb5c2ddc7397368160e67103708.png', '				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.										', 1, 'sm:4:10,md:23:10,lg:19:10', 0, 0),
-(30, 'High Heels', '89.99', '109.99', 8, '11', '/e-commerce/images/products/a4f4f84ff13ed9e4ac3b9380204fce24.jpg', '								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.													', 1, '35:16:10,36:25:10,37:8:10', 0, 0),
-(31, 'Elegant Shoes', '55.99', '79.99', 10, '11', '/e-commerce/images/products/616f70e41090d36e0d2b97747c7fcb96.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.							', 1, '36:2:10,37:7:10,38:4:10', 0, 0),
-(26, 'Summer Dress', '39.99', '59.99', 10, '12', '/e-commerce/images/products/fc6879f7988b0c1feddf87ffd41d5526.png', '				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque.								', 1, 'sm:12:10,md:24:10,lg:6:10', 0, 0),
-(32, 'Striped Hoodie', '7.99', '15.99', 11, '13', '/e-commerce/images/products/220ab18a702123ceaad46e9ce6d1d811.png', '				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.										', 1, 'sm:18:10,md:26:10,lg:7:10', 0, 0),
-(33, 'Cars And Trucks onesie', '15.99', '19.99', 7, '13', '/e-commerce/images/products/5cef5250e6b542a146bc10905e257c45.png', '				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.										', 1, 'sm:28:10,md:24:10,lg:17:10', 0, 0),
-(34, 'Modern Pants', '29.99', '49.99', 1, '14', '/e-commerce/images/products/ac98ba9c29724fd92fde1062c5fd33a3.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.							', 1, 'sm:2:10,md:6:10,lg:7:10', 0, 0),
-(35, 'Cover Alls', '39.99', '45.99', 9, '14', '/e-commerce/images/products/855c7be0a472f016a43b5ab303521dac.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.							', 1, 'sm:2:10,md:1:10', 0, 5),
-(36, 'Levis Jeans', '45.99', '59.99', 1, '6', '/e-commerce/images/products/264384b0380c7b6ff5069a49a5a48f42.png', '												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.																', 1, 'sm:15:10,md:24:10,lg:36:10', 0, 0),
-(39, 'Second multiple photo', '45.99', '59.99', 16, '5', '/e-commerce/images/products/314319801f71181b14e92eb5c5a96fab.png,/e-commerce/images/products/b813069d529e54315975f1f516e3250f.png,/e-commerce/images/products/edf3e7771a63bf394482f32801e7068a.png,/e-commerce/images/products/d86e97bdc1a402d04b4be10ed59fde33.png', '	Multiple photos						', 1, 'sm:5:10,md:7:10,lg:8:10', 1, 0),
-(38, 'Test multiple photo', '45.99', '59.99', 16, '6', '/e-commerce/images/products/181999ec5f3e7649f2f0f11d7766ff38.png,/e-commerce/images/products/a4d3099dd456fdee0e5875ea77061cfb.png,/e-commerce/images/products/f415aa50f25a23bcd58858691eda1493.png', '				Test multiple photos										', 1, 'sm:4:10,md:40:10,lg:30:10', 1, 0);
+(27, 'Long Skirt', '19.99', '39.99', 8, '12', '/shaunta/images/products/7e467564d1f0b630ded204e7e8c2c687.png', '								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.													', 1, 'sm:12:,md:20:,lg:35:', 0, 3),
+(28, 'Average Purse', '55.99', '74.99', 9, '18', '/shaunta/images/products/1c966175431c4d69ff050bf279bdc480.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.							', 1, 'default:0:10', 0, 0),
+(29, 'Blouse', '9.99', '19.99', 7, '19', '/shaunta/images/products/b904dbb5c2ddc7397368160e67103708.png', '				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.										', 1, 'sm:0:10,md:23:10,lg:19:10', 0, 4),
+(30, 'High Heels', '89.99', '109.99', 8, '11', '/shaunta/images/products/a4f4f84ff13ed9e4ac3b9380204fce24.jpg', '								Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.													', 1, '35:16:10,36:23:10,37:8:10', 0, 2),
+(31, 'Elegant Shoes', '55.99', '79.99', 10, '11', '/shaunta/images/products/616f70e41090d36e0d2b97747c7fcb96.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.							', 1, '36:0:10,37:7:10,38:4:10', 0, 2),
+(26, 'Summer Dress', '39.99', '59.99', 10, '12', '/shaunta/images/products/fc6879f7988b0c1feddf87ffd41d5526.png', '				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque.								', 1, 'sm:12:10,md:24:10,lg:6:10', 0, 0),
+(32, 'Striped Hoodie', '7.99', '15.99', 11, '13', '/shaunta/images/products/220ab18a702123ceaad46e9ce6d1d811.png', '				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.										', 1, 'sm:18:10,md:26:10,lg:4:10', 0, 3),
+(33, 'Cars And Trucks onesie', '15.99', '19.99', 7, '13', '/shaunta/images/products/5cef5250e6b542a146bc10905e257c45.png', '				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.										', 1, 'sm:28:10,md:24:10,lg:17:10', 0, 0),
+(34, 'Modern Pants', '29.99', '49.99', 1, '14', '/shaunta/images/products/ac98ba9c29724fd92fde1062c5fd33a3.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.							', 1, 'sm:2:10,md:6:10,lg:7:10', 0, 0),
+(35, 'Cover Alls', '39.99', '45.99', 9, '14', '/shaunta/images/products/855c7be0a472f016a43b5ab303521dac.png', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.							', 1, 'sm:2:10,md:1:10', 0, 5),
+(36, 'Levis Jeans', '45.99', '59.99', 1, '6', '/shaunta/images/products/264384b0380c7b6ff5069a49a5a48f42.png', '												Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed tempus dolor ut ex malesuada molestie. Fusce eu pellentesque odio, eget cursus neque. Nullam eu dictum sem, sodales varius orci. Integer eget magna porttitor, tristique leo quis, mattis nulla.																', 1, 'sm:15:10,md:24:10,lg:36:10', 0, 0),
+(39, 'Second multiple photo', '45.99', '59.99', 16, '5', '/shaunta/images/products/314319801f71181b14e92eb5c5a96fab.png,/shaunta/images/products/b813069d529e54315975f1f516e3250f.png,/shaunta/images/products/edf3e7771a63bf394482f32801e7068a.png,/shaunta/images/products/d86e97bdc1a402d04b4be10ed59fde33.png', '	Multiple photos						', 1, 'sm:5:10,md:7:10,lg:8:10', 1, 0),
+(38, 'Test multiple photo', '45.99', '59.99', 16, '6', '/shaunta/images/products/181999ec5f3e7649f2f0f11d7766ff38.png,/shaunta/images/products/a4d3099dd456fdee0e5875ea77061cfb.png,/shaunta/images/products/f415aa50f25a23bcd58858691eda1493.png', '				Test multiple photos										', 1, 'sm:4:10,md:40:10,lg:30:10', 1, 0),
+(40, 'testtwig', '45.99', '59.99', 17, '13', '/shaunta/images/products/8a66aa7735cd132eac163567c7eb492d.png,/shaunta/images/products/7d004028a92d612e1baaf7f6e50c7ee4.png', '								Test products page with twig templates\r\n			\r\n			', 1, 'testSm:30:10,testMd:20:10,testLg:50:10', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -187,7 +193,7 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   `tctn_type` varchar(255) NOT NULL,
   `tctn_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `transactions`
@@ -204,7 +210,11 @@ INSERT INTO `transactions` (`id`, `charge_id`, `cart_id`, `full_name`, `email`, 
 (8, 'ch_1BUtIpCou9RBHddSLEy9n665', 71, 'Alvin Mujkic', 'mujkicalvin1@gmail.com', '1B Place de La Mairie', '', 'France, Lons-Le-Saunier, 39000, France', 'Bourgogne', '71310', 'France', '109.97', '21.99', '131.96', '3 items from Shauntas Boutique', 'charge', '2017-12-03 09:58:24'),
 (9, 'ch_1BUu2eCou9RBHddS1LpS5AeB', 72, 'Alvin Mujkic', 'mujkicalvin1@gmail.com', '1B Place de La Mairie', '', 'Mervans', 'Bourgogne', '71310', 'France', '119.97', '23.99', '143.96', '3 items from Shauntas Boutique', 'charge', '2017-12-03 10:45:45'),
 (10, 'ch_1BVOBQCou9RBHddSeW3ckify', 81, 'Alvin Mujkic', 'mujkicalvin1@gmail.com', '1B Place de La Mairie', '', 'Mervans', 'Bourgogne', '71310', 'France', '59.97', '11.99', '71.96', '3 items from Shauntas Boutique', 'charge', '2017-12-04 18:56:48'),
-(11, 'ch_1BVOH1Cou9RBHddSHdk2cCFH', 82, 'Alvin Mujkic', 'mujkicalvin1@gmail.com', '1B Place de La Mairie', '', 'Mervans', 'Bourgogne', '71310', 'France', '199.95', '39.99', '239.94', '5 items from Shauntas Boutique', 'charge', '2017-12-04 19:02:36');
+(11, 'ch_1BVOH1Cou9RBHddSHdk2cCFH', 82, 'Alvin Mujkic', 'mujkicalvin1@gmail.com', '1B Place de La Mairie', '', 'Mervans', 'Bourgogne', '71310', 'France', '199.95', '39.99', '239.94', '5 items from Shauntas Boutique', 'charge', '2017-12-04 19:02:36'),
+(12, 'ch_1BW7mMCou9RBHddSINcUiaDc', 83, 'Alvin Mujkic', 'mujkicalvin1@gmail.com', '1B Place de La Mairie', '', 'Mervans', 'Bourgogne', '71310', 'France', '179.98', '36.00', '215.98', '2 items from Shauntas Boutique', 'charge', '2017-12-06 19:37:57'),
+(13, 'ch_1BX7U5Cou9RBHddSs06vKRPT', 84, 'Mujkic Alvin', 'mujkicalvin1@gmail.com', 'Place de La Mairie', '', 'Mervans', 'Bourgogne', '71310', 'France', '23.97', '4.79', '28.76', '3 items from Shauntas Boutique', 'charge', '2017-12-09 13:31:11'),
+(14, 'ch_1BX7lvCou9RBHddSC1cvQiAd', 85, 'Mujkic Alvin', 'mujkicalvin1@gmail.com', '1b Place de La Mairie', 'street 2 test', 'Mervans', 'Bourgogne', '71310', 'France', '111.98', '22.40', '134.38', '2 items from Shauntas Boutique', 'charge', '2017-12-09 13:49:37'),
+(15, 'ch_1BXVNECou9RBHddSeuQESJZZ', 86, 'Mujkic Alvin', 'mujkicalvin1@gmail.com', '1b Place de La Mairie', '', 'Mervans', 'Bourgogne', '71310', 'France', '39.96', '7.99', '47.95', '4 items from Shauntas Boutique', 'charge', '2017-12-10 15:01:45');
 
 -- --------------------------------------------------------
 
@@ -222,14 +232,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   `last_login` datetime NOT NULL,
   `permissions` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 --
 -- Déchargement des données de la table `users`
 --
 
 INSERT INTO `users` (`id`, `full_name`, `email`, `password`, `join_date`, `last_login`, `permissions`) VALUES
-(9, 'Mujkic Alvin', 'mujkicalvin1@gmail.com', '$2y$10$2YcOT3d3ZGWmY1lsYFfLRe9DbtJK89VWWIe1kU3euk6BiFanxnH/S', '2017-11-07 08:32:33', '2017-12-04 17:51:51', 'admin,editor');
+(9, 'Mujkic Alvin', 'mujkicalvin1@gmail.com', '$2y$10$2YcOT3d3ZGWmY1lsYFfLRe9DbtJK89VWWIe1kU3euk6BiFanxnH/S', '2017-11-07 08:32:33', '2017-12-16 16:20:36', 'admin,editor');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

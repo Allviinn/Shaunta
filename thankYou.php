@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/e-commerce/core/init.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/shaunta/core/init.php';
 // Set your secret key: remember to change this to your live secret key in production
 // See your keys here: https://dashboard.stripe.com/account/apikeys
 require_once 'vendor/stripe/stripe-php/init.php';

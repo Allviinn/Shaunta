@@ -1,5 +1,5 @@
 <?php
-require_once $_SERVER['DOCUMENT_ROOT'].'/e-commerce/core/init.php';
+require_once $_SERVER['DOCUMENT_ROOT'].'/shaunta/core/init.php';
 include 'includes/head.php';
 
 //password for admin: alvin22041995
@@ -13,7 +13,7 @@ $errors = array();
 
 <style type="text/css">
 	body {
-		background-image: url('/e-commerce/images/headerlogo/background.png');
+		background-image: url('/shaunta/images/headerlogo/background.png');
 		background-size: 100vw 100vh;
 		background-attachment: fixed;
 	}
@@ -91,7 +91,7 @@ $errors = array();
 		</div>
 	</form>
 	<p class="text-right">
-		<a href="/e-commerce/index.php" alt="Home">Visit Site</a>
+		<a href="/shaunta/index.php" alt="Home">Visit Site</a>
 	</p>
 </div>
 

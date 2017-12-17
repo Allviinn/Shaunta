@@ -1,5 +1,5 @@
 <?php
-$db = mysqli_connect("127.0.0.1","root","","ecommerce");
+$db = mysqli_connect("127.0.0.1","root","","shaunta");
 
 if(mysqli_connect_errno()) {
 	echo "Database connection failed with following errors :".mysqli_connect_error();
@@ -8,7 +8,7 @@ if(mysqli_connect_errno()) {
 
 session_start();
 
-require_once $_SERVER['DOCUMENT_ROOT']."/e-commerce/config.php";
+require_once $_SERVER['DOCUMENT_ROOT']."/shaunta/config.php";
 
 require_once BASEURL.'helpers/helpers.php';
 
